@@ -1,14 +1,20 @@
 import logo from './logo.svg';
 import './App.css';
 import Navigation from './Nav';
-import DoughnutChart from './pages/Dashboard';
+import Dashboard from './pages/Dashboard';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 
 function App() {
   return (
     <>
-        <Navigation />
-        <DoughnutChart />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Navigation />}>
+            <Route index element={< Dashboard  />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }

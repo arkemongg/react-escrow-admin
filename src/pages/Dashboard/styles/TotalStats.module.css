@@ -1,0 +1,17 @@
+.totalStatsArea{
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+}
+.totalStatsArea > *{
+    flex-grow: 1;
+}
+
+.totalStats{
+    min-width: 330px;
+    height: 450px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    margin: 5px;
+}

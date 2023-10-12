@@ -1,0 +1,26 @@
+.customersAndTrendingProductsArea{
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    overflow: hidden;
+}
+.customerChartArea{
+    background: white;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    margin: 5px;
+    width: 55%;
+    height: 450px;
+    flex-grow: 1;
+}
+.trendingChartArea{
+    background: white;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    margin: 5px;
+    min-width: 330px;
+    width: 40%;
+    height: 450px;
+    flex-grow: 1;
+}

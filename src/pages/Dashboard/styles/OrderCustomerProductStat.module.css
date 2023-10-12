@@ -1,0 +1,21 @@
+.OrderCustomerProductArea{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.item{
+    min-width: 250px;
+    height: 100px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    flex-grow: 1;
+    margin: 10px;
+}
+
+@media screen and (max-width: 1145px)  {
+    .item{
+        flex-basis: 40%;
+    }
+}

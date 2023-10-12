@@ -1,0 +1,22 @@
+
+.recentOrders{
+    background: white;
+    margin: 15px;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.ordersList{
+    min-height: 300px;
+    overflow-x: auto;
+}
+.orders{
+    display: flex;
+    width: 100%;
+    min-width: 1100px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    align-items: center;
+}
+.orders div{
+    flex-grow: 1;
+}
