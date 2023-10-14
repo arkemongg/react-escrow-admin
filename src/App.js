@@ -3,6 +3,7 @@ import './App.css';
 import Navigation from './Nav';
 import Dashboard from './pages/Dashboard';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Category from './pages/Category';
 
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigation />}>
             <Route index element={< Dashboard  />} />
+            <Route path='category' element={< Category  />} />
           </Route>
         </Routes>
       </BrowserRouter>

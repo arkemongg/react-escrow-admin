@@ -1,0 +1,16 @@
+.drawer-content {
+    display: none;
+}
+
+.outlet {
+    min-height: 100vh;
+}
+
+@media screen and (max-width: 920px)  {
+    .drawer-content {
+        display: block;
+    }
+    .nav-2{
+        display: none;
+    }
+}

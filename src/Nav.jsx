@@ -1,6 +1,13 @@
 import { Outlet, Link } from "react-router-dom";
-
+import './Nav.css'
 const Navigation = () => {
+    
+        const closeDrawer = () => {
+          const drawerToggle = document.getElementById('my-drawer');
+          if (drawerToggle.checked) {
+            drawerToggle.checked = false; // Uncheck the checkbox to hide the drawer
+          }
+        }
 
     return (
         <>
@@ -18,9 +25,21 @@ const Navigation = () => {
                                 <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay right-[0] cursor-pointer w-[50px] h-[50px] z-10 fixed">
                                     <img className="w-[30px] h-[30px]" src="/delete.png" alt="X" />
                                 </label>
-                                {/* Sidebar content here */}
-                                <li><a>Sidebar Item 1</a></li>
-                                <li><a>Sidebar Item 2</a></li>
+                                <li className="text-2xl">ESCROW STORE </li>
+                                <li className="p-2"><button>Customers</button></li>
+
+                                <li className="p-2">
+                                    <Link to={'/category'} onClick={closeDrawer}> Category</Link>
+                                </li>
+
+                                <li className="p-2"><button>Products</button></li>
+                                <li className="p-2"><button>Orders</button></li>
+                                <li className="p-2"><button>Reviews</button></li>
+                                <li className="p-2"><button>Balance</button></li>
+                                <li className="p-2"><button>Deposits</button></li>
+                                <li className="p-2"><button>Withdrawals</button></li>
+                                <li className="p-2"><button>Verifications</button></li>
+                                {/* <li className="p-2"><button>Support Emails</button></li> */}
                             </ul>
                         </div>
                     </div>
@@ -53,23 +72,18 @@ const Navigation = () => {
                 </div>
             </div>
 
-            <div className="navbar bg-base-100 border-b-[0.1px] border-gray-300">
-                <ul className="w-[60%] flex justify-between">
-                    {/* Sidebar content here */}
-                    <li><button>Customers</button></li>
-                    <li><button>Category</button></li>
-                    <li><button>Balance</button></li>
-                    <li><button>Orders</button></li>
-                    <li><button>Products</button></li>
-                    <li><button>Feedback</button></li>
-                    <li><button>Orders</button></li>
-                    <li><button>Transactions</button></li>
-                    <li><button>Deposits</button></li>
-                    <li><button>Withdraw</button></li>
-                    <li><button>Orders</button></li>
-                    <li><button>Transactions</button></li>
-                    <li><button>Deposits</button></li>
-                    <li><button>Withdraw</button></li>
+            <div className="navbar bg-base-100 border-b-[0.1px] border-gray-300 nav-2">
+                <ul className="w-[100%] flex">
+                    <li className="p-2"><button>Customers</button></li>
+                    <li className="p-2"><Link to={'/category'}>Category</Link></li>
+                    <li className="p-2"><button>Products</button></li>
+                    <li className="p-2"><button>Orders</button></li>
+                    <li className="p-2"><button>Reviews</button></li>
+                    <li className="p-2"><button>Balance</button></li>
+                    <li className="p-2"><button>Deposits</button></li>
+                    <li className="p-2"><button>Withdrawals</button></li>
+                    <li className="p-2"><button>Verifications</button></li>
+                    {/* <li className="p-2"><button>Support Emails</button></li> */}
                 </ul>
             </div>
 
