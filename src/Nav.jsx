@@ -53,6 +53,26 @@ const Navigation = () => {
                 </div>
             </div>
 
+            <div className="navbar bg-base-100 border-b-[0.1px] border-gray-300">
+                <ul className="w-[60%] flex justify-between">
+                    {/* Sidebar content here */}
+                    <li><button>Customers</button></li>
+                    <li><button>Category</button></li>
+                    <li><button>Balance</button></li>
+                    <li><button>Orders</button></li>
+                    <li><button>Products</button></li>
+                    <li><button>Feedback</button></li>
+                    <li><button>Orders</button></li>
+                    <li><button>Transactions</button></li>
+                    <li><button>Deposits</button></li>
+                    <li><button>Withdraw</button></li>
+                    <li><button>Orders</button></li>
+                    <li><button>Transactions</button></li>
+                    <li><button>Deposits</button></li>
+                    <li><button>Withdraw</button></li>
+                </ul>
+            </div>
+
             <div className="outlet">
                 <Outlet />
             </div>
