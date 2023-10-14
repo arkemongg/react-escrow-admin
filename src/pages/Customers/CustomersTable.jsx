@@ -5,7 +5,7 @@ const CustomersTable = () => {
         <>
             <div className={`${styles.CustomersTable} flex justify-between items-center px-3`}>
                 <div className="text-2xl">
-                    Reviews
+                    Customers
                 </div>
             </div>
             <div className={`${styles.CustomersTable} flex items-center px-3 bg-[#F2F2F2]`}>

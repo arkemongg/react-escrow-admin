@@ -1,3 +1,4 @@
+import DepositsTable from './Deposits/DepositsTable';
 import styles from './styles/Deposits.module.css'
 
 const Deposits = () => {
@@ -5,7 +6,7 @@ const Deposits = () => {
   return (
     <>
         <div className={styles.DepositArea}>
-            
+            <DepositsTable />
         </div>
     </>
   );

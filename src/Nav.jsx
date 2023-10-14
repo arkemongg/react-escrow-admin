@@ -67,7 +67,7 @@ const Navigation = () => {
                             <li className="p-3 font-bold">
                                 Mr Admin 1
                             </li>
-                            <li><a>Dashboard</a></li>
+                            <li><Link to={'/'}>Dashboard</Link></li>
                             <li><a>Logout</a></li>
                         </ul>
                     </div>
