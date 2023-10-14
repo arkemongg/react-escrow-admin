@@ -1,13 +1,13 @@
 import { Outlet, Link } from "react-router-dom";
 import './Nav.css'
 const Navigation = () => {
-    
-        const closeDrawer = () => {
-          const drawerToggle = document.getElementById('my-drawer');
-          if (drawerToggle.checked) {
+
+    const closeDrawer = () => {
+        const drawerToggle = document.getElementById('my-drawer');
+        if (drawerToggle.checked) {
             drawerToggle.checked = false; // Uncheck the checkbox to hide the drawer
-          }
         }
+    }
 
     return (
         <>
@@ -35,7 +35,9 @@ const Navigation = () => {
                                 <li className="p-2"><button>Products</button></li>
                                 <li className="p-2"><button>Orders</button></li>
                                 <li className="p-2"><button>Reviews</button></li>
-                                <li className="p-2"><button>Balance</button></li>
+                                <li className="p-2">
+                                    <Link to={'/balance'} onClick={closeDrawer}> Balance </Link>
+                                </li>
                                 <li className="p-2"><button>Deposits</button></li>
                                 <li className="p-2"><button>Withdrawals</button></li>
                                 <li className="p-2"><button>Verifications</button></li>
@@ -79,7 +81,7 @@ const Navigation = () => {
                     <li className="p-2"><button>Products</button></li>
                     <li className="p-2"><button>Orders</button></li>
                     <li className="p-2"><button>Reviews</button></li>
-                    <li className="p-2"><button>Balance</button></li>
+                    <li className="p-2"><Link to={'/balance'}>Balance</Link></li>
                     <li className="p-2"><button>Deposits</button></li>
                     <li className="p-2"><button>Withdrawals</button></li>
                     <li className="p-2"><button>Verifications</button></li>
