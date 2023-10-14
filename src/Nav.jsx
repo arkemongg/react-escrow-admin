@@ -76,13 +76,13 @@ const Navigation = () => {
 
             <div className="navbar bg-base-100 border-b-[0.1px] border-gray-300 nav-2">
                 <ul className="w-[100%] flex">
-                    <li className="p-2"><button>Customers</button></li>
+                    <li className="p-2"><Link to={'/customers'}>Customers</Link></li>
                     <li className="p-2"><Link to={'/category'}>Category</Link></li>
                     <li className="p-2"><button>Products</button></li>
                     <li className="p-2"><button>Orders</button></li>
-                    <li className="p-2"><button>Reviews</button></li>
+                    <li className="p-2"><Link to={'/reviews'}>Reviews</Link></li>
                     <li className="p-2"><Link to={'/balance'}>Balance</Link></li>
-                    <li className="p-2"><button>Deposits</button></li>
+                    <li className="p-2"><Link to={'/deposits'}>Deposits</Link></li>
                     <li className="p-2"><button>Withdrawals</button></li>
                     <li className="p-2"><button>Verifications</button></li>
                     {/* <li className="p-2"><button>Support Emails</button></li> */}

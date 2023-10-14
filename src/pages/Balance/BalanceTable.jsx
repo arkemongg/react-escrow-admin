@@ -19,7 +19,7 @@ const BalanceTables = () => {
                     {/* head */}
                     <thead>
                         <tr>
-                            <th></th>
+                            <th>#</th>
                             <th>Customer ID</th>
                             <th>Username</th>
                             <th>Balance</th>

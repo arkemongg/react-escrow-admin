@@ -16,7 +16,7 @@ const CategoryTables = () => {
                     {/* head */}
                     <thead>
                         <tr>
-                            <th></th>
+                            <th>#</th>
                             <th>Category</th>
                             <th>Description</th>
                             <th className='text-center'>Edit/Delete</th>
