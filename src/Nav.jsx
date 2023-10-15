@@ -78,12 +78,12 @@ const Navigation = () => {
                 <ul className="w-[100%] flex">
                     <li className="p-2"><Link to={'/customers'}>Customers</Link></li>
                     <li className="p-2"><Link to={'/category'}>Category</Link></li>
-                    <li className="p-2"><button>Products</button></li>
-                    <li className="p-2"><button>Orders</button></li>
+                    <li className="p-2"><Link to={'/products'}>Products</Link></li>
+                    <li className="p-2"><Link to={'/orders'}>Orders</Link></li>
                     <li className="p-2"><Link to={'/reviews'}>Reviews</Link></li>
                     <li className="p-2"><Link to={'/balance'}>Balance</Link></li>
                     <li className="p-2"><Link to={'/deposits'}>Deposits</Link></li>
-                    <li className="p-2"><button>Withdrawals</button></li>
+                    <li className="p-2"><Link to={'/withdrawals'}>Withdrawals</Link></li>
                     <li className="p-2"><button>Verifications</button></li>
                     {/* <li className="p-2"><button>Support Emails</button></li> */}
                 </ul>

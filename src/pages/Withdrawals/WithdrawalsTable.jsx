@@ -1,26 +1,27 @@
-import styles from './styles/CustomersTable.module.css'
+import styles from './styles/WithdrawalsTable.module.css'
 
-const CustomersTable = () => {
+const WithdrawalsTable = () => {
     return (
         <>
-            <div className={`${styles.CustomersTable} flex justify-between items-center px-3`}>
+            <div className={`${styles.WithdrawalsTable} flex justify-between items-center px-3`}>
                 <div className="text-2xl">
-                    Customers
+                    Withdrawals
                 </div>
             </div>
-            <div className={`${styles.CustomersTable} flex items-center px-3 bg-[#F2F2F2]`}>
+            <div className={`${styles.WithdrawalsTable} flex items-center px-3 bg-[#F2F2F2]`}>
                 <input type="text" placeholder="Username" className="input input-bordered rounded-none w-full max-w-lg" />
                 <div className="btn btn-success rounded-none  ml-2 w-[100px]">
                     Search
                 </div>
             </div>
-            {/* <div className={`${styles.CustomersTable} flex items-center px-3`}>
+            <div className={`${styles.WithdrawalsTable} flex items-center px-3`}>
                 <select className="select select-bordered rounded-none w-full max-w-lg">
                     <option disabled selected>Filter</option>
+                    <option>Pending</option>
+                    <option>Failed</option>
                     <option>COMPLETED</option>
-                    <option>NOT COMPLETED</option>
                 </select>
-            </div> */}
+            </div>
 
             <div className="overflow-x-auto">
                 <table className="table table-zebra">
@@ -28,16 +29,12 @@ const CustomersTable = () => {
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>ID</th>
                             <th>USERNAME</th>
-                            <th>Email</th>
-                            <th>FIRST NAME</th>
-                            <th>LAST NAME</th>
-                            <th>VERIFIED USER</th>
-                            <th>SUPER SELLER</th>
-                            <th>IS SELLER</th>
-                            <th>ACTIVE USER</th>
-                            <th className='min-w-[350px]'>EDIT</th>
+                            <th>CUSTOMER ID</th>
+                            <th>AMOUNT</th>
+                            <th>STATUS</th>
+                            <th>CREATED AT</th>
+                            <th className='min-w-[360px]'>MARK AS COMPLETE</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -70,25 +67,21 @@ const CustomersTable = () => {
     )
 }
 
-export default CustomersTable
+export default WithdrawalsTable
 
 const Row = (props) => {
     return (
         <>
             <tr>
                 <th>8</th>
-                <th>8</th>
                 <td>Username</td>
-                <td>Email@email.com Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nostrum, mollitia?</td>
-                <td>First</td>
-                <td>Last</td>
-                <td>YES</td>
-                <td>NO</td>
-                <td>YES</td>
-                <td>YES</td>
+                <td>100</td>
+                <td>19.99</td>
+                <td>Pending</td>
+                <td>12/10/20</td>
                 <td>
-                    <span className='btn btn-success w-[150px] btn-sm' >Edit</span>
-                    <span className='btn btn-error w-[150px] ml-2 btn-sm' >Deactivate User</span>
+                    <span className='btn btn-success w-[160px] btn-sm' >MARK AS COMPLETE</span>
+                    <span className='btn btn-error w-[160px] ml-2 btn-sm' >MARK AS FAILED</span>
                 </td>
             </tr>
         </>
