@@ -127,17 +127,12 @@ const CompelteWithdrawals = (props) => {
                         <input value={props.data} disabled type="text" placeholder="Fee" className="input input-bordered w-full max-w-lg" />
                         
                         
-                        <div htmlFor="status" className="my-2 text-xl">Coin type</div>
+                        <div htmlFor="status" className="my-2 text-xl">Coin Type</div>
                         <input type="text" disabled placeholder="Status" className="input input-bordered w-full max-w-lg" />
                         
                         <div htmlFor="createdat" className="my-2 text-xl">Address</div>
                         <input type="text" value={"Loremipsumdolorsitametconsecteturadipisicingelit.Earumrationepariaturquaeipsamolestiaeprovidentaspernaturabeaqueodioquasi."} disabled placeholder="created at" className="input input-bordered w-full max-w-lg" />
                        
-                        <div htmlFor="status" className="my-2 text-xl">Status</div>
-                        <input type="text" disabled placeholder="Status" className="input input-bordered w-full max-w-lg" />
-                        
-                        <div htmlFor="createdat" className="my-2 text-xl">Created at</div>
-                        <input type="text" disabled placeholder="created at" className="input input-bordered w-full max-w-lg" />
                     </div>
 
                     <button className="btn btn-success mt-2 w-[200px]">MARK AS COMPLETE</button>
@@ -175,17 +170,12 @@ const FailedWithdrawals = (props) => {
                         <div htmlFor="fee" className="my-2 text-xl">Fee</div>
                         <input value={props.data} disabled type="text" placeholder="Fee" className="input input-bordered w-full max-w-lg" />
                         
-                        <div htmlFor="status" className="my-2 text-xl">Coin type</div>
+                        <div htmlFor="status" className="my-2 text-xl">Coin Type</div>
                         <input type="text" disabled placeholder="Status" className="input input-bordered w-full max-w-lg" />
                         
                         <div htmlFor="createdat" className="my-2 text-xl">Address</div>
                         <input type="text" value={"Loremipsumdolorsitametconsecteturadipisicingelit.Earumrationepariaturquaeipsamolestiaeprovidentaspernaturabeaqueodioquasi."} disabled placeholder="created at" className="input input-bordered w-full max-w-lg" />
                        
-                        <div htmlFor="status" className="my-2 text-xl">Status</div>
-                        <input type="text" disabled placeholder="Status" className="input input-bordered w-full max-w-lg" />
-                        
-                        <div htmlFor="createdat" className="my-2 text-xl">Created at</div>
-                        <input type="text" disabled placeholder="created at" className="input input-bordered w-full max-w-lg" />
                     </div>
 
                     <button className="btn btn-error mt-2 w-[200px]">MARK AS FAILED</button>

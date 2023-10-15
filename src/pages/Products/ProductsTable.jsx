@@ -74,6 +74,12 @@ const ProductsTable = () => {
 export default ProductsTable
 
 const Row = (props) => {
+    const handleFeatured = (event) => {
+        document.getElementById('featuredmodal').showModal()
+    }
+    const handleDelist = (event) => {
+        document.getElementById('delistmodal').showModal()
+    }
     return (
         <>
             <tr>
@@ -91,12 +97,86 @@ const Row = (props) => {
                 <td>YES</td>
                 <td>12/10/20</td>
                 <td>
-                    <span className='btn btn-success w-[170px] btn-sm' >MAKE THIS FEATURED</span>
-                    <span className='btn btn-error w-[160px] ml-2 btn-sm' >DELIST</span>
+                    <span onClick={handleFeatured} className='btn btn-success w-[170px] btn-sm' >MAKE AS FEATURED</span>
+                    <span onClick={handleDelist} className='btn btn-error w-[160px] ml-2 btn-sm' >DELIST</span>
                 </td>
+                <FeaturedProduct />
+                <DelistProduct />
             </tr>
         </>
     )
 }
 
 
+const FeaturedProduct = (props) => {
+    return (
+        <>
+
+            <dialog id="featuredmodal" className="modal">
+                <div className="modal-box">
+                    <h3 className="font-bold text-lg">Featured Product
+                        <br />
+                        ID#:80
+                    </h3>
+
+                    <div className="productInput">
+                        <div className="my-2 ">
+                            <img className='w-[328px] h-[250px] m-auto ' src="./dashboard/test.jpg" alt="" />
+                        </div>
+                        <div className="my-2 text-xl">Title</div>
+                        <input value={props.data} disabled type="text" placeholder="Title" className="input input-bordered w-full max-w-lg" />
+
+                        <div className="my-2 text-xl">Seller Username</div>
+                        <input value={props.data} disabled type="text" placeholder="Username" className="input input-bordered w-full max-w-lg mb-2" />
+
+
+                    </div>
+
+                    <button className="btn btn-success mt-2 w-[200px]">MARK AS FEATURED</button>
+
+                    <div className="modal-action">
+                        <form method="dialog">
+                            <button className="btn">Close</button>
+                        </form>
+                    </div>
+                </div>
+            </dialog>
+        </>
+    )
+}
+const DelistProduct = (props) => {
+    return (
+        <>
+
+            <dialog id="delistmodal" className="modal">
+                <div className="modal-box">
+                    <h3 className="font-bold text-lg">Delist Product
+                        <br />
+                        ID#:80
+                    </h3>
+
+                    <div className="productInput">
+                        <div className="my-2 ">
+                            <img className='w-[328px] h-[250px] m-auto ' src="./dashboard/test.jpg" alt="" />
+                        </div>
+                        <div className="my-2 text-xl">Title</div>
+                        <input value={props.data} disabled type="text" placeholder="Title" className="input input-bordered w-full max-w-lg" />
+
+                        <div className="my-2 text-xl">Seller Username</div>
+                        <input value={props.data} disabled type="text" placeholder="Username" className="input input-bordered w-full max-w-lg mb-2" />
+
+
+                    </div>
+
+                    <button className="btn btn-error mt-2 w-[200px]">DELIST</button>
+
+                    <div className="modal-action">
+                        <form method="dialog">
+                            <button className="btn">Close</button>
+                        </form>
+                    </div>
+                </div>
+            </dialog>
+        </>
+    )
+}
