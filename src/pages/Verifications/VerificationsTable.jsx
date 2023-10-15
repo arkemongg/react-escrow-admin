@@ -1,26 +1,26 @@
-import styles from './styles/CustomersTable.module.css'
+import styles from './styles/VerificationsTable.module.css'
 
-const CustomersTable = () => {
+const VerificationsTable = () => {
     return (
         <>
-            <div className={`${styles.CustomersTable} flex justify-between items-center px-3`}>
+            <div className={`${styles.VerificationsTable} flex justify-between items-center px-3`}>
                 <div className="text-2xl">
-                    Customers
+                    Verifications
                 </div>
             </div>
-            <div className={`${styles.CustomersTable} flex items-center px-3 bg-[#F2F2F2]`}>
-                <input type="text" placeholder="Username" className="input input-bordered rounded-none w-full max-w-lg" />
+            <div className={`${styles.VerificationsTable} flex items-center px-3 bg-[#F2F2F2]`}>
+                <input type="text" placeholder="USERNAME" className="input input-bordered rounded-none w-full max-w-lg" />
                 <div className="btn btn-success rounded-none  ml-2 w-[100px]">
                     Search
                 </div>
             </div>
-            {/* <div className={`${styles.CustomersTable} flex items-center px-3`}>
+            <div className={`${styles.VerificationsTable} flex items-center px-3`}>
                 <select className="select select-bordered rounded-none w-full max-w-lg">
                     <option disabled selected>Filter</option>
+                    <option>Pending</option>
                     <option>COMPLETED</option>
-                    <option>NOT COMPLETED</option>
                 </select>
-            </div> */}
+            </div>
 
             <div className="overflow-x-auto">
                 <table className="table table-zebra">
@@ -28,17 +28,13 @@ const CustomersTable = () => {
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>ID</th>
                             <th>USERNAME</th>
-                            <th>EMAIL</th>
-                            <th className='min-w-[150px]'>PHOTO</th>
-                            <th>FIRST NAME</th>
-                            <th>LAST NAME</th>
-                            <th>VERIFIED USER</th>
-                            <th>SUPER SELLER</th>
-                            <th>IS SELLER</th>
-                            <th>ACTIVE USER</th>
-                            <th className='min-w-[350px]'>EDIT</th>
+                            <th>CUSTOMER NAME</th>
+                            <th className='min-w-[150px]' >NID FRONT</th>
+                            <th className='min-w-[150px]'>NID BACK</th>
+                            <th className='min-w-[150px]'>SELFIE</th>
+                            <th>STATUS</th>
+                            <th className='min-w-[360px]'>EDIT</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -71,27 +67,23 @@ const CustomersTable = () => {
     )
 }
 
-export default CustomersTable
+export default VerificationsTable
 
 const Row = (props) => {
     return (
         <>
             <tr>
                 <th>8</th>
-                <th>8</th>
                 <td>Username</td>
-                <td>Email@email.com Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nostrum, mollitia?</td>
-                <td> <img className='w-[80px] h-[80px] border-2  rounded-[50%]' src="./dashboard/test.jpg" alt="" />
+                <td>100</td>
+                <td> <img className='w-[80px] h-[80px] border-2  rounded-lg' src="./dashboard/test.jpg" alt="" />
                 </td>
-                <td>First</td>
-                <td>Last</td>
-                <td>YES</td>
-                <td>NO</td>
-                <td>YES</td>
-                <td>YES</td>
+                <td><img className='w-[80px] h-[80px] border-2  rounded-lg' src="./dashboard/test.jpg" alt="" /></td>
+                <td><img className='w-[80px] h-[80px] border-2  rounded-lg' src="./dashboard/test.jpg" alt="" /></td>
+                <td>COMPLETED</td>
                 <td>
-                    <span className='btn btn-success w-[150px] btn-sm' >Edit</span>
-                    <span className='btn btn-error w-[150px] ml-2 btn-sm' >Deactivate User</span>
+                    <span className='btn btn-success w-[160px] btn-sm' >MARK AS VERIFIED</span>
+                    <span className='btn btn-error w-[160px] ml-2 btn-sm' >CANCEL/RESUBMIT</span>
                 </td>
             </tr>
         </>

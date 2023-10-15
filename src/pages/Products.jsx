@@ -1,4 +1,5 @@
 
+import ProductsTable from './Products/ProductsTable';
 import styles from './styles/Products.module.css'
 
 const Products = () => {
@@ -6,7 +7,7 @@ const Products = () => {
   return (
     <>
         <div className={styles.ProductsArea}>
-            
+            <ProductsTable />
         </div>
     </>
   );

@@ -7,7 +7,7 @@ const CategoryTables = () => {
                 <div className="text-2xl">
                     Category
                 </div>
-                <div className="btn btn-primary">
+                <div className="btn btn-primary" onClick={() => document.getElementById('newmodal').showModal()}>
                     New Category
                 </div>
             </div>
@@ -23,89 +23,15 @@ const CategoryTables = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {/* row 1 */}
-                        <tr>
-                            <th>1</th>
-                            <td>Hart Hagerty</td>
-                            <td>Hart Hagerty</td>
-                            <td className='flex justify-center'>
-                                <span className='btn btn-success w-[150px] btn-sm' >Edit</span>
-                                <span className='btn btn-error w-[150px] btn-sm ml-2' >delete</span>
-
-                            </td>
-
-                        </tr>
-                        {/* row 2 */}
-                        <tr>
-                            <th>2</th>
-                            <td>Hart Hagerty</td>
-                            <td>Hart Hagerty</td>
-                            <td className='flex justify-center'>
-                                <span className='btn btn-success w-[150px] btn-sm' >Edit</span>
-                                <span className='btn btn-error w-[150px] btn-sm ml-2' >delete</span>
-                            </td>
-                        </tr>
-                        {/* row 3 */}
-                        <tr>
-                            <th>3</th>
-                            <td>Brice Swyre</td>
-                            <td>Brice Swyre</td>
-                            <td className='flex justify-center'>
-                                <span className='btn btn-success w-[150px] btn-sm' >Edit</span>
-                                <span className='btn btn-error w-[150px] btn-sm ml-2' >delete</span>
-
-                            </td>
-                        </tr>
-                        {/* row 4 */}
-                        <tr>
-                            <th>4</th>
-                            <td>Brice Swyre</td>
-                            <td>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat, omnis!</td>
-                            <td className='flex justify-center'>
-                                <span className='btn btn-success w-[150px] btn-sm' >Edit</span>
-                                <span className='btn btn-error w-[150px] btn-sm ml-2' >delete</span>
-                            </td>
-                        </tr>
-                        {/* row 5 */}
-                        <tr>
-                            <th>5</th>
-                            <td>Brice Swyre</td>
-                            <td>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat, omnis!</td>
-                            <td className='flex justify-center'>
-                                <span className='btn btn-success w-[150px] btn-sm' >Edit</span>
-                                <span className='btn btn-error w-[150px] btn-sm ml-2' >delete</span>
-                            </td>
-                        </tr>
-                        {/* row 6 */}
-                        <tr>
-                            <th>6</th>
-                            <td>Brice Swyre</td>
-                            <td>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat, omnis!</td>
-                            <td className='flex justify-center'>
-                                <span className='btn btn-success w-[150px] btn-sm' >Edit</span>
-                                <span className='btn btn-error w-[150px] btn-sm ml-2' >delete</span>
-                            </td>
-                        </tr>
-                        {/* row 7 */}
-                        <tr>
-                            <th>7</th>
-                            <td>Brice Swyre</td>
-                            <td>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat, omnis!</td>
-                            <td className='flex justify-center'>
-                                <span className='btn btn-success w-[150px] btn-sm' >Edit</span>
-                                <span className='btn btn-error w-[150px] btn-sm ml-2' >delete</span>
-                            </td>
-                        </tr>
-                        {/* row 8 */}
-                        <tr>
-                            <th>8</th>
-                            <td>Brice Swyre</td>
-                            <td>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat, omnis!</td>
-                            <td className='flex justify-center items-center'>
-                                <span className='btn btn-success w-[150px] btn-sm' >Edit</span>
-                                <span className='btn btn-error w-[150px] btn-sm ml-2' >delete</span>
-                            </td>
-                        </tr>
+                        <Row />
+                        <Row />
+                        <Row />
+                        <Row />
+                        <Row />
+                        <Row />
+                        <Row />
+                        <Row />
+                        <Row />
                     </tbody>
                 </table>
             </div>
@@ -114,14 +40,92 @@ const CategoryTables = () => {
                 <div className="btn btn-primary w-[160px] ml-2"> Next </div>
             </div>
             <div className={`flex justify-center items-center p-2 pb-5 `}>
-                    <input type="text" placeholder="Page" className={` text-sm p-1 w-[50px] h-[30px] input rounded-none input-bordered`} /> 
-                    <div className="px-3 font-light">
-                         of {10}
-                    </div>
-                    <div  className="btn btn-sm btn-primary">Go</div>
+                <input type="text" placeholder="Page" className={` text-sm p-1 w-[50px] h-[30px] input rounded-none input-bordered`} />
+                <div className="px-3 font-light">
+                    of {10}
+                </div>
+                <div className="btn btn-sm btn-primary">Go</div>
             </div>
+            <NewCategory />
+            
         </>
     )
 }
 
 export default CategoryTables
+
+const Row = () => {
+    const handleClick = (event)=>{
+        document.getElementById('updatemodal').showModal()
+    }
+    return (
+        <>
+            <tr>
+                <th>6</th>
+                <td>Brice Swyre</td>
+                <td>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat, omnis!</td>
+                <td className='flex justify-center'>
+                    <span onClick={handleClick} className='btn btn-success w-[150px] btn-sm' >Edit</span>
+                    <span className='btn btn-error w-[150px] btn-sm ml-2' >delete</span>
+                </td>
+                <UpdateCategory data= {1} />
+            </tr>
+            
+        </>
+    )
+}
+
+
+const NewCategory = () => {
+    return (
+        <>
+            <dialog id="newmodal" className="modal">
+                <div className="modal-box">
+                    <h3 className="font-bold text-lg">ADD A NEW CATEGORY</h3>
+
+                    <div className="categoryInput">
+                        <div htmlFor="category" className="my-2 text-xl">Title</div>
+                        <input type="text" placeholder="Category Title" className="input input-bordered w-full max-w-lg" />
+                        <div htmlFor="description" className="my-2 text-xl">Description</div>
+                        <input type="text" placeholder="Description (optional)" className="input input-bordered w-full max-w-lg" />
+                    </div>
+
+                    <button className="btn btn-success mt-2">ADD TO DATABASE</button>
+
+                    <div className="modal-action">
+                        <form method="dialog">
+                            <button className="btn">Close</button>
+                        </form>
+                    </div>
+                </div>
+            </dialog>
+        </>
+    )
+}
+const UpdateCategory = (props) => {
+    return (
+        <>
+            <dialog id="updatemodal" className="modal">
+                <div className="modal-box">
+                    <h3 className="font-bold text-lg">ADD A NEW CATEGORY</h3>
+
+                    <div className="categoryInput">
+                        <div htmlFor="category" className="my-2 text-xl">Title</div>
+                        <input value={props.data} type="text" placeholder="Category Title" className="input input-bordered w-full max-w-lg" />
+                        <div htmlFor="description" className="my-2 text-xl">Description</div>
+                        <input type="text" placeholder="Description (optional)" className="input input-bordered w-full max-w-lg" />
+                    </div>
+
+                    <button className="btn btn-success mt-2">UPDATE</button>
+
+                    <div className="modal-action">
+                        <form method="dialog">
+                            <button className="btn">Close</button>
+                        </form>
+                    </div>
+                </div>
+            </dialog>
+        </>
+    )
+}
+

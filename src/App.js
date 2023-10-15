@@ -10,6 +10,7 @@ import Deposits from './pages/Deposits';
 import Withdrawals from './pages/Withdrawls';
 import Orders from './pages/Orders';
 import Products from './pages/Products';
+import Verifications from './pages/Verification';
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
             <Route path='balance' element={< Balance />} />
             <Route path='deposits' element={< Deposits />} />
             <Route path='withdrawals' element={< Withdrawals />} />
+            <Route path='verifications' element={< Verifications />} />
           </Route>
         </Routes>
       </BrowserRouter>

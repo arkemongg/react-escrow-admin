@@ -84,7 +84,7 @@ const Navigation = () => {
                     <li className="p-2"><Link to={'/balance'}>Balance</Link></li>
                     <li className="p-2"><Link to={'/deposits'}>Deposits</Link></li>
                     <li className="p-2"><Link to={'/withdrawals'}>Withdrawals</Link></li>
-                    <li className="p-2"><button>Verifications</button></li>
+                    <li className="p-2"><Link to={'/verifications'}>Verifications</Link></li>
                     {/* <li className="p-2"><button>Support Emails</button></li> */}
                 </ul>
             </div>
