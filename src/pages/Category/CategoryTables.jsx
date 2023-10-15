@@ -47,7 +47,6 @@ const CategoryTables = () => {
                 <div className="btn btn-sm btn-primary">Go</div>
             </div>
             <NewCategory />
-            
         </>
     )
 }
@@ -55,8 +54,11 @@ const CategoryTables = () => {
 export default CategoryTables
 
 const Row = () => {
-    const handleClick = (event)=>{
+    const handleEdit = (event) => {
         document.getElementById('updatemodal').showModal()
+    }
+    const handleDelete = (event) => {
+        document.getElementById('deletemodal').showModal()
     }
     return (
         <>
@@ -65,12 +67,13 @@ const Row = () => {
                 <td>Brice Swyre</td>
                 <td>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat, omnis!</td>
                 <td className='flex justify-center'>
-                    <span onClick={handleClick} className='btn btn-success w-[150px] btn-sm' >Edit</span>
-                    <span className='btn btn-error w-[150px] btn-sm ml-2' >delete</span>
+                    <span onClick={handleEdit} className='btn btn-success w-[150px] btn-sm' >Edit</span>
+                    <span onClick={handleDelete} className='btn btn-error w-[150px] btn-sm ml-2' >delete</span>
                 </td>
-                <UpdateCategory data= {1} />
+                <UpdateCategory data={1} />
+                <DeleteCategory data={1} />
             </tr>
-            
+
         </>
     )
 }
@@ -105,10 +108,11 @@ const NewCategory = () => {
 const UpdateCategory = (props) => {
     return (
         <>
+
             <dialog id="updatemodal" className="modal">
                 <div className="modal-box">
-                    <h3 className="font-bold text-lg">ADD A NEW CATEGORY</h3>
-
+                    <h3 className="font-bold text-lg">UPDATE CATEGORY</h3>
+                    
                     <div className="categoryInput">
                         <div htmlFor="category" className="my-2 text-xl">Title</div>
                         <input value={props.data} type="text" placeholder="Category Title" className="input input-bordered w-full max-w-lg" />
@@ -116,7 +120,34 @@ const UpdateCategory = (props) => {
                         <input type="text" placeholder="Description (optional)" className="input input-bordered w-full max-w-lg" />
                     </div>
 
-                    <button className="btn btn-success mt-2">UPDATE</button>
+                    <button className="btn btn-success mt-2 w-[200px]">UPDATE</button>
+
+                    <div className="modal-action">
+                        <form method="dialog">
+                            <button className="btn">Close</button>
+                        </form>
+                    </div>
+                </div>
+            </dialog>
+        </>
+    )
+}
+
+const DeleteCategory = (props) => {
+    return (
+        <>
+            <dialog id="deletemodal" className="modal">
+                <div className="modal-box">
+                    <h3 className="font-bold text-lg">DELETE </h3>
+                    
+                    <div className="categoryInput">
+                        <div htmlFor="category" className="my-2 text-xl">Title</div>
+                        <input value={props.data} disabled type="text" placeholder="Category Title" className="input input-bordered w-full max-w-lg" />
+                        <div htmlFor="description" className="my-2 text-xl">Description</div>
+                        <input type="text" disabled placeholder="Description (optional)" className="input input-bordered w-full max-w-lg" />
+                    </div>
+
+                    <button className="btn btn-error mt-2 w-[200px]">DELETE</button>
 
                     <div className="modal-action">
                         <form method="dialog">

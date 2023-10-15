@@ -17,8 +17,8 @@ const ProductsTable = () => {
             <div className={`${styles.ProductsTable} flex items-center px-3`}>
                 <select className="select select-bordered rounded-none w-full max-w-lg">
                     <option disabled selected>Filter</option>
-                    <option>DELISTED</option>
-                    <option>ACTIVE</option>
+                    <option>FEATURED</option>
+                    <option>NOT_FEATURED</option>
                 </select>
             </div>
 
@@ -98,3 +98,5 @@ const Row = (props) => {
         </>
     )
 }
+
+

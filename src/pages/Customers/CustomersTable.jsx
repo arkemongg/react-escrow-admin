@@ -28,7 +28,7 @@ const CustomersTable = () => {
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>ID</th>
+                            
                             <th>USERNAME</th>
                             <th>EMAIL</th>
                             <th className='min-w-[150px]'>PHOTO</th>
@@ -38,7 +38,7 @@ const CustomersTable = () => {
                             <th>SUPER SELLER</th>
                             <th>IS SELLER</th>
                             <th>ACTIVE USER</th>
-                            <th className='min-w-[350px]'>EDIT</th>
+                            <th className='min-w-[550px]'>EDIT</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -74,11 +74,20 @@ const CustomersTable = () => {
 export default CustomersTable
 
 const Row = (props) => {
+    const handleEdit = (event) => {
+        document.getElementById('updatemodal').showModal()
+    }
+    const handleSuper = (event) => {
+        document.getElementById('supermodal').showModal()
+    }
+    const handleDeactivate = (event) => {
+        document.getElementById('deactivatemodal').showModal()
+    }
     return (
         <>
             <tr>
                 <th>8</th>
-                <th>8</th>
+                
                 <td>Username</td>
                 <td>Email@email.com Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nostrum, mollitia?</td>
                 <td> <img className='w-[80px] h-[80px] border-2  rounded-[50%]' src="./dashboard/test.jpg" alt="" />
@@ -90,10 +99,116 @@ const Row = (props) => {
                 <td>YES</td>
                 <td>YES</td>
                 <td>
-                    <span className='btn btn-success w-[150px] btn-sm' >Edit</span>
-                    <span className='btn btn-error w-[150px] ml-2 btn-sm' >Deactivate User</span>
+                    <span onClick={handleEdit} className='btn btn-success w-[150px] btn-sm' >Edit</span>
+                    <span onClick={handleSuper} className='btn btn-primary w-[190px] btn-sm ml-2' >MARK AS SUPER SELLER</span>
+                    <span onClick={handleDeactivate} className='btn btn-error w-[150px] ml-2 btn-sm' >Deactivate User</span>
                 </td>
+                <UpdateCustomer data ={"Ok"}/>
+                <SuperCustomer data ={"Ok"}/>
+                <DeactivateCustomer data ={"Ok"}/>
             </tr>
+        </>
+    )
+}
+
+const UpdateCustomer = (props) => {
+    return (
+        <>
+
+            <dialog id="updatemodal" className="modal">
+                <div className="modal-box">
+                    <h3 className="font-bold text-lg">UPDATE CUSTOMER</h3>
+                    <h3 className="font-bold text-lg">ID#:69402</h3>
+                    
+                    <div className="categoryInput">
+                        <div htmlFor="username" className="my-2 text-xl">Username</div>
+                        <input value={props.data} type="text" placeholder="Username" className="input input-bordered w-full max-w-lg" />
+                        <div htmlFor="description" className="my-2 text-xl">Email</div>
+                        <input type="text" placeholder="Email" className="input input-bordered w-full max-w-lg" />
+                        <div htmlFor="username" className="my-2 text-xl">First name</div>
+                        <input value={props.data} type="text" placeholder="First Name" className="input input-bordered w-full max-w-lg" />
+                        <div htmlFor="description" className="my-2 text-xl">Last Name</div>
+                        <input type="text" placeholder="Last Name" className="input input-bordered w-full max-w-lg" />
+                    </div>
+
+                    <button className="btn btn-success mt-2 w-[200px]">UPDATE</button>
+
+                    <div className="modal-action">
+                        <form method="dialog">
+                            <button className="btn">Close</button>
+                        </form>
+                    </div>
+                </div>
+            </dialog>
+        </>
+    )
+}
+const SuperCustomer = (props) => {
+    return (
+        <>
+
+            <dialog id="supermodal" className="modal">
+                <div className="modal-box">
+                    <h3 className="font-bold text-lg">SUPER CUSTOMER
+                    <br />
+                    ID#:80
+                    </h3>
+                    
+                    <div className="categoryInput">
+                        <div htmlFor="username" className="my-2 text-xl">Username</div>
+                        <input value={props.data} disabled type="text" placeholder="Username" className="input input-bordered w-full max-w-lg" />
+                        <div htmlFor="description" className="my-2 text-xl">Email</div>
+                        <input type="email" disabled placeholder="Email" className="input input-bordered w-full max-w-lg" />
+                        <div htmlFor="username" className="my-2 text-xl">First name</div>
+                        <input value={props.data} disabled type="text" placeholder="First Name" className="input input-bordered w-full max-w-lg" />
+                        <div htmlFor="description" className="my-2 text-xl">Last Name</div>
+                        <input type="text" disabled placeholder="Last Name" className="input input-bordered w-full max-w-lg" />
+                    </div>
+
+                    <button className="btn btn-primary mt-2 w-[200px]">MARK AS SUPER SELLER</button>
+
+                    <div className="modal-action">
+                        <form method="dialog">
+                            <button className="btn">Close</button>
+                        </form>
+                    </div>
+                </div>
+            </dialog>
+        </>
+    )
+}
+
+const DeactivateCustomer = (props) => {
+    return (
+        <>
+
+            <dialog id="deactivatemodal" className="modal">
+                <div className="modal-box">
+                    <h3 className="font-bold text-lg">DEACTIVATE CUSTOMER
+                    <br />
+                    ID#:80
+                    </h3>
+                    
+                    <div className="categoryInput">
+                        <div htmlFor="username" className="my-2 text-xl">Username</div>
+                        <input value={props.data} disabled type="text" placeholder="Username" className="input input-bordered w-full max-w-lg" />
+                        <div htmlFor="description" className="my-2 text-xl">Email</div>
+                        <input type="email" disabled placeholder="Email" className="input input-bordered w-full max-w-lg" />
+                        <div htmlFor="username" className="my-2 text-xl">First name</div>
+                        <input value={props.data} disabled type="text" placeholder="First Name" className="input input-bordered w-full max-w-lg" />
+                        <div htmlFor="description" className="my-2 text-xl">Last Name</div>
+                        <input type="text" disabled placeholder="Last Name" className="input input-bordered w-full max-w-lg" />
+                    </div>
+
+                    <button className="btn btn-error mt-2 w-[200px]">DEATIVATE</button>
+
+                    <div className="modal-action">
+                        <form method="dialog">
+                            <button className="btn">Close</button>
+                        </form>
+                    </div>
+                </div>
+            </dialog>
         </>
     )
 }
