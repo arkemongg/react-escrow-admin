@@ -10,7 +10,7 @@ const Login = ()=>{
         if(isLogged){
             navigate('/')
         }
-    },[])
+    },[isLogged])
 
     return (
         <>

@@ -70,6 +70,12 @@ const VerificationsTable = () => {
 export default VerificationsTable
 
 const Row = (props) => {
+    const handleComplete = (event) => {
+        document.getElementById('completemodal').showModal()
+    }
+    const handleFailed = (event) => {
+        document.getElementById('failedmodal').showModal()
+    }
     return (
         <>
             <tr>
@@ -82,7 +88,7 @@ const Row = (props) => {
                 <td><img className='w-[80px] h-[80px] border-2  rounded-lg' src="./dashboard/test.jpg" alt="" /></td>
                 <td>COMPLETED</td>
                 <td>
-                    <span className='btn btn-success w-[160px] btn-sm' >MARK AS VERIFIED</span>
+                    <span onClick={handleComplete} className='btn btn-success w-[160px] btn-sm' >MARK AS VERIFIED</span>
                     <span className='btn btn-error w-[160px] ml-2 btn-sm' >CANCEL/RESUBMIT</span>
                 </td>
                 <CompelteVerification />
@@ -92,27 +98,36 @@ const Row = (props) => {
 }
 
 const CompelteVerification = (props) => {
+
     return (
         <>
             <dialog id="completemodal" className="modal">
                 <div className="modal-box">
-                    <h3 className="font-bold text-lg">COMPLETE ORDER</h3>
+                    <h3 className="font-bold text-lg">Complete Verification</h3>
                     <h3 className="font-bold text-lg">ID#:6940</h3>
-                    <h3 className="text-error text-sm"> ***Marking complete will transfer the balance to seller from buyer.</h3>
 
                     <div className="categoryInput">
+
+                        <div className="my-2 text-xl">Username</div>
+                        <input value={props.data} disabled type="text" placeholder="Username" className="input input-bordered w-full max-w-lg" />
+
+                        <div className="my-2 text-xl">Customer Name</div>
+                        <input value={props.data} disabled type="text" placeholder="Customer Name" className="input input-bordered w-full max-w-lg" />
+
+                        <div className="my-2 text-xl text-center">NID Front</div>
                         <div className="my-2 ">
                             <img className='w-[328px] h-[250px] m-auto ' src="./dashboard/test.jpg" alt="" />
                         </div>
-                        <div className="my-2 text-xl">Product Title</div>
-                        <input value={props.data} disabled type="text" placeholder="Product" className="input input-bordered w-full max-w-lg" />
 
-                        <div className="my-2 text-xl">Buyer Username</div>
-                        <input value={props.data} disabled type="text" placeholder="Buyer Username" className="input input-bordered w-full max-w-lg" />
+                        <div className="my-2 text-xl text-center">NID Back</div>
+                        <div className="my-2 ">
+                            <img className='w-[328px] h-[250px] m-auto ' src="./dashboard/test.jpg" alt="" />
+                        </div>
 
-                        <div className="my-2 text-xl">Seller Username</div>
-                        <input type="text" disabled placeholder="Seller Username" className="input input-bordered w-full max-w-lg" />
-
+                        <div className="my-2 text-xl text-center">Selfie</div>
+                        <div className="my-2 ">
+                            <img className='w-[328px] h-[250px] m-auto ' src="./dashboard/test.jpg" alt="" />
+                        </div>
 
                         {/* <div className="my-2 text-xl">QTY</div>
                         <input value={props.data} disabled type="text" placeholder="QTY" className="input input-bordered w-full max-w-lg" />
@@ -123,13 +138,9 @@ const CompelteVerification = (props) => {
 
                         <div htmlFor="status" className="my-2 text-xl">Status</div>
                         <input type="text" disabled placeholder="Status" className="input input-bordered w-full max-w-lg" />
-
-                        <div className="my-2 text-xl">Created At</div>
-                        <input type="text" disabled placeholder="created at" className="input input-bordered w-full max-w-lg" />
-
                     </div>
 
-                    <button className="btn btn-success mt-2 w-[200px]">MARK AS COMPLETE</button>
+                    <button className="btn btn-success mt-2 w-[200px]">MARK AS VERIFIED</button>
 
                     <div className="modal-action">
                         <form method="dialog">

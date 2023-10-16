@@ -62,8 +62,10 @@ const Row = (props) => {
                     <span onClick={handleEdit} className='btn btn-success w-[150px] btn-sm' >Edit</span>
                     <span onClick={handleDelete} className='btn btn-error w-[150px] btn-sm ml-2' >delete</span>
                 </td>
+                <td>
                 <UpdateCategory  id={props.id} />
                 <DeleteCategory   id={props.id} />
+                </td>
             </tr>
 
         </>
@@ -130,7 +132,7 @@ const DeleteCategory = (props) => {
     const handleDelete = (event)=>{
         // console.log(props.id);
         // event.target.parentElement.parentElement.parentElement.remove()
-        console.log(event.target.parentElement.parentElement.parentElement.remove());
+        console.log(event.target.closest('tr').remove());
     }
     
     return (

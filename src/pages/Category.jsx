@@ -8,17 +8,18 @@ import { useEffect } from 'react';
 const Category = () => {
   const { isLogged } = useAuth();
   const navigate = useNavigate()
-  useEffect(()=>{
-      if(!isLogged){
-          navigate('/login')
-      }
-  },[])
-  
+  useEffect(() => {
+    if (!isLogged) {
+      navigate('/login');
+    } 
+  }, [isLogged, navigate])
+
+
   return (
     <>
-        <div className={styles.CategoryArea}>
-            <CategoryTables />
-        </div>
+      <div className={styles.CategoryArea}>
+        <CategoryTables />
+      </div>
     </>
   );
 };
