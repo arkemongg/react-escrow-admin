@@ -23,19 +23,11 @@ const CategoryTables = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <Row />
-                        <Row />
-                        <Row />
-                        <Row />
-                        <Row />
-                        <Row />
-                        <Row />
-                        <Row />
-                        <Row />
+                        {Array.from({ length: 10 }, (_, index) => <Row key={index} id={index} />)}
                     </tbody>
                 </table>
             </div>
-            <div className='btnArea flex justify-center flex-wrap p-5 pb-2'>
+            {/* <div className='btnArea flex justify-center flex-wrap p-5 pb-2'>
                 <div className="btn btn-primary w-[150px]"> Previous </div>
                 <div className="btn btn-primary w-[160px] ml-2"> Next </div>
             </div>
@@ -45,7 +37,7 @@ const CategoryTables = () => {
                     of {10}
                 </div>
                 <div className="btn btn-sm btn-primary">Go</div>
-            </div>
+            </div> */}
             <NewCategory />
         </>
     )
@@ -53,25 +45,25 @@ const CategoryTables = () => {
 
 export default CategoryTables
 
-const Row = () => {
+const Row = (props) => {
     const handleEdit = (event) => {
-        document.getElementById('updatemodal').showModal()
+        document.getElementById(`updatemodal${props.id}`).showModal()
     }
     const handleDelete = (event) => {
-        document.getElementById('deletemodal').showModal()
+        document.getElementById(`deletemodal${props.id}`).showModal()
     }
     return (
         <>
             <tr>
-                <th>6</th>
+                <th>{props.id}</th>
                 <td>Brice Swyre</td>
                 <td>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat, omnis!</td>
                 <td className='flex justify-center'>
                     <span onClick={handleEdit} className='btn btn-success w-[150px] btn-sm' >Edit</span>
                     <span onClick={handleDelete} className='btn btn-error w-[150px] btn-sm ml-2' >delete</span>
                 </td>
-                <UpdateCategory data={1} />
-                <DeleteCategory data={1} />
+                <UpdateCategory  id={props.id} />
+                <DeleteCategory   id={props.id} />
             </tr>
 
         </>
@@ -109,13 +101,14 @@ const UpdateCategory = (props) => {
     return (
         <>
 
-            <dialog id="updatemodal" className="modal">
+            <dialog id={`updatemodal${props.id}`} className="modal">
                 <div className="modal-box">
                     <h3 className="font-bold text-lg">UPDATE CATEGORY</h3>
+                    <h3 className="font-bold text-lg">ID#:{props.id}</h3>
                     
                     <div className="categoryInput">
                         <div htmlFor="category" className="my-2 text-xl">Title</div>
-                        <input value={props.data} type="text" placeholder="Category Title" className="input input-bordered w-full max-w-lg" />
+                        <input value={props.id} type="text" placeholder="Category Title" className="input input-bordered w-full max-w-lg" />
                         <div htmlFor="description" className="my-2 text-xl">Description</div>
                         <input type="text" placeholder="Description (optional)" className="input input-bordered w-full max-w-lg" />
                     </div>
@@ -134,20 +127,26 @@ const UpdateCategory = (props) => {
 }
 
 const DeleteCategory = (props) => {
+    const handleDelete = (event)=>{
+        // console.log(props.id);
+        // event.target.parentElement.parentElement.parentElement.remove()
+        console.log(event.target.parentElement.parentElement.parentElement.remove());
+    }
+    
     return (
         <>
-            <dialog id="deletemodal" className="modal">
+            <dialog id={`deletemodal${props.id}`} className="modal">
                 <div className="modal-box">
-                    <h3 className="font-bold text-lg">DELETE </h3>
+                    <h3 className="font-bold text-lg">DELETE CATEGORY</h3>
                     
                     <div className="categoryInput">
                         <div htmlFor="category" className="my-2 text-xl">Title</div>
-                        <input value={props.data} disabled type="text" placeholder="Category Title" className="input input-bordered w-full max-w-lg" />
+                        <input value={props.id} disabled type="text" placeholder="Category Title" className="input input-bordered w-full max-w-lg" />
                         <div htmlFor="description" className="my-2 text-xl">Description</div>
                         <input type="text" disabled placeholder="Description (optional)" className="input input-bordered w-full max-w-lg" />
                     </div>
 
-                    <button className="btn btn-error mt-2 w-[200px]">DELETE</button>
+                    <button onClick={handleDelete} className="btn btn-error mt-2 w-[200px]">DELETE</button>
 
                     <div className="modal-action">
                         <form method="dialog">

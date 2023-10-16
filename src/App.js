@@ -1,4 +1,6 @@
 import './App.css';
+import { AuthProvider } from './AuthContext';
+
 import Navigation from './Nav';
 import Dashboard from './pages/Dashboard';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
@@ -11,14 +13,17 @@ import Withdrawals from './pages/Withdrawls';
 import Orders from './pages/Orders';
 import Products from './pages/Products';
 import Verifications from './pages/Verification';
+import Login from './pages/Login';
 
 
 function App() {
   return (
     <>
+    <AuthProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Navigation />}>
+            <Route path="login" element={<Login />} />
             <Route index element={< Dashboard />} />
             <Route path='customers' element={< Customers />} />
             <Route path='category' element={< Category />} />
@@ -32,6 +37,7 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+      </AuthProvider>
     </>
   );
 }

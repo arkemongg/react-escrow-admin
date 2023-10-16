@@ -85,7 +85,59 @@ const Row = (props) => {
                     <span className='btn btn-success w-[160px] btn-sm' >MARK AS VERIFIED</span>
                     <span className='btn btn-error w-[160px] ml-2 btn-sm' >CANCEL/RESUBMIT</span>
                 </td>
+                <CompelteVerification />
             </tr>
+        </>
+    )
+}
+
+const CompelteVerification = (props) => {
+    return (
+        <>
+            <dialog id="completemodal" className="modal">
+                <div className="modal-box">
+                    <h3 className="font-bold text-lg">COMPLETE ORDER</h3>
+                    <h3 className="font-bold text-lg">ID#:6940</h3>
+                    <h3 className="text-error text-sm"> ***Marking complete will transfer the balance to seller from buyer.</h3>
+
+                    <div className="categoryInput">
+                        <div className="my-2 ">
+                            <img className='w-[328px] h-[250px] m-auto ' src="./dashboard/test.jpg" alt="" />
+                        </div>
+                        <div className="my-2 text-xl">Product Title</div>
+                        <input value={props.data} disabled type="text" placeholder="Product" className="input input-bordered w-full max-w-lg" />
+
+                        <div className="my-2 text-xl">Buyer Username</div>
+                        <input value={props.data} disabled type="text" placeholder="Buyer Username" className="input input-bordered w-full max-w-lg" />
+
+                        <div className="my-2 text-xl">Seller Username</div>
+                        <input type="text" disabled placeholder="Seller Username" className="input input-bordered w-full max-w-lg" />
+
+
+                        {/* <div className="my-2 text-xl">QTY</div>
+                        <input value={props.data} disabled type="text" placeholder="QTY" className="input input-bordered w-full max-w-lg" />
+                        
+                        <div className="my-2 text-xl">Total</div>
+                        <input value={props.data} disabled type="text" placeholder="Total" className="input input-bordered w-full max-w-lg" />
+                         */}
+
+                        <div htmlFor="status" className="my-2 text-xl">Status</div>
+                        <input type="text" disabled placeholder="Status" className="input input-bordered w-full max-w-lg" />
+
+                        <div className="my-2 text-xl">Created At</div>
+                        <input type="text" disabled placeholder="created at" className="input input-bordered w-full max-w-lg" />
+
+                    </div>
+
+                    <button className="btn btn-success mt-2 w-[200px]">MARK AS COMPLETE</button>
+
+                    <div className="modal-action">
+                        <form method="dialog">
+                            <button className="btn">Close</button>
+                        </form>
+                    </div>
+                </div>
+            </dialog>
         </>
     )
 }

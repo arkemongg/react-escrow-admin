@@ -1,6 +1,11 @@
 import { Outlet, Link } from "react-router-dom";
 import './Nav.css'
-const Navigation = () => {
+import { useAuth } from "./AuthContext";
+const NavigationWithLogin = () => {
+    const { logout } = useAuth();
+    const handleLogout = ()=>{
+        logout()
+    }
 
     const closeDrawer = () => {
         const drawerToggle = document.getElementById('my-drawer');
@@ -68,7 +73,7 @@ const Navigation = () => {
                                 Mr Admin 1
                             </li>
                             <li><Link to={'/'}>Dashboard</Link></li>
-                            <li><a>Logout</a></li>
+                            <li onClick={handleLogout}><a>Logout</a></li>
                         </ul>
                     </div>
                 </div>
@@ -100,6 +105,42 @@ const Navigation = () => {
             </footer>
         </>
     )
+}
+
+const NavigationWithoutLogin = () => {
+
+    return (
+        <>
+            <div className="navbar bg-base-100 border-b-[0.1px] border-gray-300">
+               
+                    <div className="w-[100%] flex justify-center">
+                        <button className=" btn btn-ghost normal-case text-xl text-center">Escrow Admin Panel</button>
+                    </div>
+                
+            </div>
+
+
+            <div className="outlet">
+                <Outlet />
+            </div>
+
+            <footer className=" footer footer-center p-4 bg-base-300 text-base-content fixed bottom-0">
+                <aside>
+                    <p>Copyright © 2023 - All right reserved by Escrow Team - Ark</p>
+                </aside>
+            </footer>
+        </>
+    )
+}
+
+const Navigation = () => {
+    const { isLogged, login, logout } = useAuth();
+    // console.log(isLogged);
+    if (isLogged) {
+        return <NavigationWithLogin />
+    } else {
+        return <NavigationWithoutLogin />
+    }
 }
 
 export default Navigation
