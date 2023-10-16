@@ -8,11 +8,13 @@ import {
     Title,
     Tooltip,
     Legend,
-    
+
 } from 'chart.js';
-import { Bar,Doughnut } from 'react-chartjs-2';
+import { Bar, Doughnut } from 'react-chartjs-2';
 
 import styles from './styles/CustomersAndTrendingProducts.module.css'
+import { getToken } from '../AxiosHeaders';
+import { useAuth } from '../../AuthContext';
 
 
 ChartJS.register(
@@ -29,26 +31,45 @@ const CustomersAndTrendingProducts = () => {
     return (
         <>
             <div className={styles.customersAndTrendingProductsArea}>
-                    <CustomersLastSixMonths />
-                    <TrendingProductsDoughnut />
+                <CustomersLastSixMonths />
+                <TrendingProductsDoughnut />
             </div>
         </>
     );
 };
 
 const CustomersLastSixMonths = () => {
-    const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN","JUL","AUG","SEP","OCT","NOV","DEC"]
-    // const labels = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN"]
-    
-    const [chartData,setChartData] = useState([])
-    const [labels,setlabel] = useState([])
+    const { logout } = useAuth()
+    const months = ["MONTHS", "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]
+    const [chartData, setChartData] = useState([])
+    const [labels, setLabel] = useState([])
 
-    useEffect(()=>{
-        setTimeout(() => {
-            setlabel(["JAN", "FEB", "MAR", "APR", "MAY", "JUN"])
-            setChartData(["0", "1", "2", "3", "4", "5"])
-        }, 2000);
-    })
+    useEffect(() => {
+        const url = '/admin/customers-count/'
+        getToken(url)
+            .then(response => {
+                if (response.status === 200) {
+                    const labelD = []
+                    const chartD = []
+                    response.data.forEach(data => {
+                        labelD.unshift(months[data.month])
+                        chartD.unshift(data.count)
+                    })
+                    setLabel(labelD)
+                    setChartData(chartD)
+                }
+            })
+            .catch(error => {
+                if (error.response) {
+                    if (error.response.status === 401) {
+                        logout()
+                    }
+                }
+            });
+
+        return () => { }; //HANDLE MULTIPLE CALL ERROR
+
+    }, [])
 
     const data = {
         labels: labels,
@@ -81,7 +102,7 @@ const CustomersLastSixMonths = () => {
                 display: false
             }
         },
-        responsive:true,
+        responsive: true,
         maintainAspectRatio: false
     }
     return (
@@ -101,12 +122,46 @@ const CustomersLastSixMonths = () => {
 }
 
 const TrendingProductsDoughnut = () => {
-    const labels = ["Cards", "Keys", "Coins", "BTC", "LTC", "JUN"]
+    
+    const { logout } = useAuth()
+    const [chartData, setChartData] = useState([])
+    const [labels, setLabel] = useState([])
+
+    useEffect(() => {
+        const url = '/admin/trending-products/'
+        getToken(url)
+            .then(response => {
+                if (response.status === 200) {
+                    const labelD = []
+                    const chartD = []
+                    response.data.forEach(data => {
+                        if (data.title.length > 15) {
+                            labelD.unshift(data.title.slice(0, 10));
+                        } else {
+                            labelD.unshift(data.title);
+                        }
+                        chartD.unshift(data.sales)
+                    })
+                    setLabel(labelD)
+                    setChartData(chartD)
+                }
+            })
+            .catch(error => {
+                if (error.response) {
+                    if (error.response.status === 401) {
+                        logout()
+                    }
+                }
+            });
+
+        return () => { }; //HANDLE MULTIPLE CALL ERROR
+
+    }, [])
     const data = {
         labels: labels,
         datasets: [{
             label: "Sales",
-            data: [65, 59, 80, 81, 56, 55],
+            data: chartData,
             backgroundColor: [
                 'rgb(255, 99, 132)',
                 'rgb(54, 162, 235)',
@@ -125,7 +180,7 @@ const TrendingProductsDoughnut = () => {
                 display: true
             }
         },
-        responsive:true,
+        responsive: true,
         maintainAspectRatio: false
     }
     return (
@@ -138,7 +193,7 @@ const TrendingProductsDoughnut = () => {
             <div className='w-[100%] h-[320px] pt-2' >
                 <Doughnut options={options} data={data} />
             </div>
-            
+
         </div>
 
     )

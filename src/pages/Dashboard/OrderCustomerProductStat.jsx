@@ -8,13 +8,13 @@ import { FlaotingError } from '../GlobalTemplates/FloatingError';
 const OrderCustomerProductStat = () => {
   const [err, setErr] = useState(false)
   const [message, setMessage] = useState("false")
-
+  const {logout} = useAuth()
 
   const [orderData, setOrderData] = useState()
   const [depositData, setDepositData] = useState()
   const [viewData, setViewData] = useState()
   const [customerData, setCustomerData] = useState()
-  const {logout} = useAuth()
+ 
 
   useEffect(() => {
     
