@@ -1,13 +1,59 @@
 import styles from './styles/OrderCustomerProductStat.module.css'
+
+import { getToken } from '../AxiosHeaders.js';
+import { useEffect, useState } from 'react';
+import { useAuth } from '../../AuthContext';
+import { FlaotingError } from '../GlobalTemplates/FloatingError';
+
 const OrderCustomerProductStat = () => {
+  const [err, setErr] = useState(false)
+  const [message, setMessage] = useState("false")
+
+
+  const [orderData, setOrderData] = useState()
+  const [depositData, setDepositData] = useState()
+  const [viewData, setViewData] = useState()
+  const [customerData, setCustomerData] = useState()
+  const {logout} = useAuth()
+
+  useEffect(() => {
+    
+    const url = '/admin/total-data/'
+    getToken(url)
+      .then(response => {
+        if (response.status === 200) {
+          const data = response.data
+          setOrderData(data.total_orders)
+          setDepositData(data.total_deposits)
+          setViewData(data.total_products_view)
+          setCustomerData(data.total_customer)
+        }
+      })
+      .catch(error => {
+        setErr(true)
+        if(error.response){
+          if(error.response.status===401){
+            logout()
+          }else{
+            setMessage("Error fetching data.")
+          }
+        }else{
+          setMessage("No response received from the server.")
+        }
+      });
+
+    return () => {}; //HANDLE MULTIPLE CALL ERROR
+
+  }, [])
 
   return (
     <>
+      {err? <FlaotingError err={err} setErr = {setErr} message = {message} />:""}
       <div className={styles.OrderCustomerProductArea}>
-        <TotalOrders />
-        <TotalDeposits />
-        <TotalViews />
-        <TotalCustomer />
+        <TotalOrders data={orderData} />
+        <TotalDeposits data={depositData} />
+        <TotalViews data={viewData} />
+        <TotalCustomer data={customerData} />
       </div>
     </>
   );
@@ -15,7 +61,8 @@ const OrderCustomerProductStat = () => {
 
 export default OrderCustomerProductStat;
 
-const TotalOrders = () => {
+const TotalOrders = (props) => {
+  
   return (
     <div className={`${styles.item} border-l-4 border-primary flex justify-between items-center`}>
       <div className="inforArea">
@@ -23,7 +70,7 @@ const TotalOrders = () => {
           Total Orders
         </div>
         <div className="text-2xl p-2 text-primary">
-          8850
+          {props.data ? props.data : <span className="loading loading-bars loading-md"></span>}
         </div>
       </div>
       <div className="imgArea p-2">
@@ -32,7 +79,7 @@ const TotalOrders = () => {
     </div>
   )
 }
-const TotalDeposits = () => {
+const TotalDeposits = (props) => {
   return (
     <div className={`${styles.item} border-l-4 border-success flex justify-between items-center`}>
       <div className="inforArea">
@@ -40,7 +87,8 @@ const TotalDeposits = () => {
           Total depopsits
         </div>
         <div className="text-2xl p-2 text-success">
-          $69420.00
+          {props.data ? "$" + props.data : <span className="loading loading-bars loading-md"></span>}
+
         </div>
       </div>
       <div className="imgArea p-2">
@@ -50,7 +98,7 @@ const TotalDeposits = () => {
   )
 }
 
-const TotalCustomer = () => {
+const TotalCustomer = (props) => {
   return (
     <div className={`${styles.item} border-l-4 border-info flex justify-between items-center`}>
       <div className="inforArea">
@@ -58,7 +106,7 @@ const TotalCustomer = () => {
           Total Customers
         </div>
         <div className="text-2xl p-2 text-info">
-          8850
+          {props.data ? props.data : <span className="loading loading-bars loading-md"></span>}
         </div>
       </div>
       <div className="imgArea p-2">
@@ -68,7 +116,7 @@ const TotalCustomer = () => {
   )
 }
 
-const TotalViews = () => {
+const TotalViews = (props) => {
   return (
     <div className={`${styles.item} border-l-4 border-accent flex justify-between items-center`}>
       <div className="inforArea">
@@ -76,7 +124,8 @@ const TotalViews = () => {
           Total Product Views
         </div>
         <div className="text-2xl p-2 text-accent">
-          8850
+          {props.data ? props.data : <span className="loading loading-bars loading-md"></span>}
+
         </div>
       </div>
       <div className="imgArea p-2">

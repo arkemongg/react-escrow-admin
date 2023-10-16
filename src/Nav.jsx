@@ -70,7 +70,7 @@ const NavigationWithLogin = () => {
                         </label>
                         <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
                             <li className="p-3 font-bold">
-                                Mr Admin 1
+                                {localStorage.getItem('user')!==null?"@"+localStorage.getItem('user'):"Admin"}
                             </li>
                             <li><Link to={'/'}>Dashboard</Link></li>
                             <li onClick={handleLogout}><a>Logout</a></li>
@@ -134,8 +134,8 @@ const NavigationWithoutLogin = () => {
 }
 
 const Navigation = () => {
-    const { isLogged, login, logout } = useAuth();
-    // console.log(isLogged);
+    const { isLogged } = useAuth();
+    
     if (isLogged) {
         return <NavigationWithLogin />
     } else {

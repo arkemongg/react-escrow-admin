@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Chart as ChartJS,
     ArcElement,
@@ -37,12 +37,24 @@ const CustomersAndTrendingProducts = () => {
 };
 
 const CustomersLastSixMonths = () => {
-    const labels = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN"]
+    const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN","JUL","AUG","SEP","OCT","NOV","DEC"]
+    // const labels = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN"]
+    
+    const [chartData,setChartData] = useState([])
+    const [labels,setlabel] = useState([])
+
+    useEffect(()=>{
+        setTimeout(() => {
+            setlabel(["JAN", "FEB", "MAR", "APR", "MAY", "JUN"])
+            setChartData(["0", "1", "2", "3", "4", "5"])
+        }, 2000);
+    })
+
     const data = {
         labels: labels,
         datasets: [{
             label: "New Customers",
-            data: [65, 59, 80, 81, 56, 55],
+            data: chartData,
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(255, 159, 64, 0.2)',

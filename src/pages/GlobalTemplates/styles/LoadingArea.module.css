@@ -1,0 +1,11 @@
+.LoaidngAreaSection{
+    width: inherit;
+    height: inherit;
+    min-height: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.Hidden{
+    display: none;
+}
