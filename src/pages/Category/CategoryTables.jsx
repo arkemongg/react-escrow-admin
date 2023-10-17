@@ -1,8 +1,52 @@
+import { useEffect, useState } from 'react'
 import styles from './styles/CategoryTables.module.css'
+import { getToken } from '../AxiosHeaders';
+import { useAuth } from '../../AuthContext';
+import { FlaotingError } from '../GlobalTemplates/FloatingError';
+import LoadingArea from '../GlobalTemplates/LoadingArea';
+import { EmptyMessage } from '../GlobalTemplates/Empty';
 
 const CategoryTables = () => {
+    const {logout} = useAuth()
+    const [fetched, setFetched] = useState(false)
+    const [err, setErr] = useState(false)
+
+    const [message, setMessage] = useState("Error.")
+
+    const [data,setData] = useState([])
+    
+    useEffect(() => {
+        setFetched(false)
+        const url = '/admin/category/'
+        getToken(url)
+          .then(response => {
+            if (response.status === 200) {
+                setData(response.data)
+                setFetched(true)
+            }
+          })
+          .catch(error => {
+            setErr(true)
+            if(error.response){
+              if(error.response.status===401){
+                logout()
+              }else{
+                setMessage("Unexprected error.")
+              }
+            }else{
+                setMessage("No response received from the server.")
+            }
+          });
+
+        return () => { 
+        };
+
+    }, []);
+
     return (
         <>
+            {err? <FlaotingError err={err} setErr = {setErr} message = {message} />:""}
+
             <div className={`${styles.CategoryTables} flex justify-between items-center px-3`}>
                 <div className="text-2xl">
                     Category
@@ -23,9 +67,23 @@ const CategoryTables = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {Array.from({ length: 10 }, (_, index) => <Row key={index} id={index} />)}
+                        {data.map(category=>{
+                            return <Row
+                                key = {category.id}
+                                id = {category.id}
+                                title = {category.title}
+                                description = {category.description}
+                            />
+                        })}
                     </tbody>
+                    
                 </table>
+                <div className={`w-[100%] h-[700px] ${fetched?"hidden":""}`}>
+                    {<LoadingArea />}
+                </div>
+                <div className={`w-[100%] h-[700px] ${fetched && data.length<0 ?"":"hidden"}`}>
+                    {<EmptyMessage message = {"No category found."}/>}
+                </div>
             </div>
             {/* <div className='btnArea flex justify-center flex-wrap p-5 pb-2'>
                 <div className="btn btn-primary w-[150px]"> Previous </div>
@@ -56,15 +114,15 @@ const Row = (props) => {
         <>
             <tr>
                 <th>{props.id}</th>
-                <td>Brice Swyre</td>
-                <td>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat, omnis!</td>
+                <td>{props.title}</td>
+                <td>{props.description}</td>
                 <td className='flex justify-center'>
                     <span onClick={handleEdit} className='btn btn-success w-[150px] btn-sm' >Edit</span>
                     <span onClick={handleDelete} className='btn btn-error w-[150px] btn-sm ml-2' >delete</span>
                 </td>
                 <td>
-                <UpdateCategory  id={props.id} />
-                <DeleteCategory   id={props.id} />
+                    <UpdateCategory  id={props.id} title = {props.title} description = {props.description} />
+                    <DeleteCategory   id={props.id} />
                 </td>
             </tr>
 
@@ -100,6 +158,12 @@ const NewCategory = () => {
     )
 }
 const UpdateCategory = (props) => {
+    const [title,setTitle] = useState(props.title)
+    const [description,setDescription] = useState(props.description)
+    const handleChange = (e) => {
+        setTitle(e.target.value);
+      };
+
     return (
         <>
 
@@ -110,9 +174,9 @@ const UpdateCategory = (props) => {
                     
                     <div className="categoryInput">
                         <div htmlFor="category" className="my-2 text-xl">Title</div>
-                        <input value={props.id} type="text" placeholder="Category Title" className="input input-bordered w-full max-w-lg" />
+                        <input onChange={handleChange} value={title} type="text" placeholder="Category Title" className="input input-bordered w-full max-w-lg" />
                         <div htmlFor="description" className="my-2 text-xl">Description</div>
-                        <input type="text" placeholder="Description (optional)" className="input input-bordered w-full max-w-lg" />
+                        <input onChange={e=>setDescription(e.target.value)} value={props.description}type="text" placeholder="Description (optional)" className="input input-bordered w-full max-w-lg" />
                     </div>
 
                     <button className="btn btn-success mt-2 w-[200px]">UPDATE</button>

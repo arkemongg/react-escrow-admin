@@ -4,10 +4,9 @@ import styles from './styles/RecentOrders.module.css'
 import { convertDatetimeToDate, getToken } from '../AxiosHeaders';
 import LoadingArea from '../GlobalTemplates/LoadingArea'
 import { apiUrl } from '../Urls';
+import { Link } from 'react-router-dom';
 const RecentOrders = () => {
 
-    const [err, setErr] = useState(false)
-    const [message, setMessage] = useState("false")
     const {logout} = useAuth()
   
     const [data, setData] = useState([])
@@ -22,7 +21,7 @@ const RecentOrders = () => {
           }
         })
         .catch(error => {
-          setErr(true)
+          
           if(error.response){
             if(error.response.status===401){
               logout()
@@ -42,9 +41,9 @@ const RecentOrders = () => {
                         <div className="span">
                             Recent Orders
                         </div>
-                        <div className="btn btn-primary">
+                        <Link to={'category'} className="btn btn-primary">
                             All Orders
-                        </div>
+                        </Link>
                     </div>
                     <hr />
 
@@ -59,7 +58,7 @@ const RecentOrders = () => {
                                 <div className='font-bold w-[120px] min-w-[120px]' >Date</div>
                             </li>
                             {data.length<1?<LoadingArea />:data.map(order=>{
-                                console.log(order.orderitems[0]);
+                                
                                 return <Order  
                                     id ={order.id}
                                     product = {order.orderitems[0].productTitle}
@@ -68,7 +67,7 @@ const RecentOrders = () => {
                                     price = {order.orderitems[0].unit_price}
                                     status = {order.order_status}
                                     date = {order.created_at}
-
+                                    key = {order.id}
                                 />
                             })}
                         </ul>
@@ -83,7 +82,7 @@ export default RecentOrders;
 
 
 const Order = (props) => {
-    console.log(props.status);
+
     const escrow_pending = <div className='bg-warning text-sm text-white w-[100px] rounded text-center'> Pending </div>
     const escrow_complete = <div className='bg-success text-sm text-white w-[100px] rounded text-center'> Complete </div>
     const escrow_failed = <div className='bg-error text-sm text-white w-[100px] rounded text-center'> Failed </div>
@@ -99,7 +98,7 @@ const Order = (props) => {
     return (
         <>
             <li className={`${styles.orders} px-5 py-2`}>
-                <div className=' w-[120px]  min-w-[120px]'>{props.product}</div>
+                <div className=' w-[120px]  min-w-[120px]'>{props.product.length>15?props.product.slice(0,14):props.product}</div>
                 <div className=' w-[120px]  min-w-[120px]' >
                     <img className='w-[80px] h-[80px] border-2 rounded-lg' src={apiUrl+props.img} alt="" />
                 </div>
