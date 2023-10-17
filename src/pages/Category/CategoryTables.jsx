@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 import styles from './styles/CategoryTables.module.css'
-import { getToken } from '../AxiosHeaders';
+import { deleteToken, getToken,patchToken,postToken } from '../AxiosHeaders';
 import { useAuth } from '../../AuthContext';
 import { FlaotingError } from '../GlobalTemplates/FloatingError';
 import LoadingArea from '../GlobalTemplates/LoadingArea';
 import { EmptyMessage } from '../GlobalTemplates/Empty';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const CategoryTables = () => {
+    const location = useLocation();
     const {logout} = useAuth()
     const [fetched, setFetched] = useState(false)
     const [err, setErr] = useState(false)
@@ -41,7 +43,7 @@ const CategoryTables = () => {
         return () => { 
         };
 
-    }, []);
+    }, [location.key]);
 
     return (
         <>
@@ -122,7 +124,7 @@ const Row = (props) => {
                 </td>
                 <td>
                     <UpdateCategory  id={props.id} title = {props.title} description = {props.description} />
-                    <DeleteCategory   id={props.id} />
+                    <DeleteCategory  id={props.id} title = {props.title} description = {props.description} />
                 </td>
             </tr>
 
@@ -132,6 +134,55 @@ const Row = (props) => {
 
 
 const NewCategory = () => {
+    const {logout} = useAuth()
+    const [success,setSuccess] = useState(false)
+    const [failed,setFailed] = useState(false)
+    const [clicked,setClicked] = useState(false)
+    const [message, setMessage] = useState("Failed to update.")
+
+    const [title,setTitle] = useState()
+    const [description,setDescription] = useState()
+
+    const navigate = useNavigate()
+    const handlePost = (event)=>{
+        setFailed(false)
+        setSuccess(false)
+        setClicked(true)
+        const data = {
+                "title": title,
+                "description": description,
+            }
+        
+        const url = `/admin/category/`
+        postToken(url,data)
+        .then(data=>{
+            if(data.status===201){
+                setSuccess(true)
+                navigate(`/category?added=${title}`) 
+                setClicked(false)
+            }
+        }).catch(error=>{
+            setFailed(true)
+            setClicked(false)
+           
+            if(error.response){
+                if(error.response.status===401){
+                  logout()
+                }else if(error.response.status===400){
+                    setMessage("Invalid input.")
+                }
+            }else{
+                setMessage("No response from server")
+            }
+        })
+    }
+
+    const handleClose = ()=>{
+        setFailed(false)
+        setSuccess(false)
+        setTitle("")
+        setDescription("")
+    }
     return (
         <>
             <dialog id="newmodal" className="modal">
@@ -140,16 +191,20 @@ const NewCategory = () => {
 
                     <div className="categoryInput">
                         <div htmlFor="category" className="my-2 text-xl">Title</div>
-                        <input type="text" placeholder="Category Title" className="input input-bordered w-full max-w-lg" />
+                        <input onChange={e=>setTitle(e.target.value)} value={title} type="text" placeholder="Category Title" className="input input-bordered w-full max-w-lg" />
                         <div htmlFor="description" className="my-2 text-xl">Description</div>
-                        <input type="text" placeholder="Description (optional)" className="input input-bordered w-full max-w-lg" />
+                        <input onChange={e=>setDescription(e.target.value)} value={description} type="text" placeholder="Description (optional)" className="input input-bordered w-full max-w-lg" />
                     </div>
+                    <p className={`${success?"":"hidden"} text-success`}>Successfully updated.</p>
+                    <p className={`${failed?"":"hidden"} text-error`}>{message}</p>
 
-                    <button className="btn btn-success mt-2">ADD TO DATABASE</button>
+                    <button onClick={handlePost} className="btn btn-success mt-2">
+                        {clicked?<span className="loading loading-dots loading-xs"></span>:"ADD TO DATABASE"}
+                    </button>
 
                     <div className="modal-action">
                         <form method="dialog">
-                            <button className="btn">Close</button>
+                            <button onClick={handleClose} className="btn">Close</button>
                         </form>
                     </div>
                 </div>
@@ -158,11 +213,52 @@ const NewCategory = () => {
     )
 }
 const UpdateCategory = (props) => {
+    const {logout} = useAuth()
+    const [success,setSuccess] = useState(false)
+    const [failed,setFailed] = useState(false)
+    const [clicked,setClicked] = useState(false)
+    const [message, setMessage] = useState("Failed to update.")
+
     const [title,setTitle] = useState(props.title)
     const [description,setDescription] = useState(props.description)
-    const handleChange = (e) => {
-        setTitle(e.target.value);
-      };
+    const navigate = useNavigate()
+    const handleUpdate = (event)=>{
+        setFailed(false)
+        setSuccess(false)
+        setClicked(true)
+        const data = {
+                "title": title,
+                "description": description,
+            }
+        
+        const url = `/admin/category/${props.id}/`
+        patchToken(url,data)
+        .then(data=>{
+            if(data.status===200){
+                setSuccess(true)
+                navigate(`/category?updated=${title}`) 
+                setClicked(false)
+            }
+        }).catch(error=>{
+            setFailed(true)
+            setClicked(false)
+           
+            if(error.response){
+                if(error.response.status===401){
+                  logout()
+                }else if(error.response.status===400){
+                    setMessage("Invalid input.")
+                }
+            }else{
+                setMessage("No response from server")
+            }
+        })
+    }
+
+    const handleClose = ()=>{
+        setFailed(false)
+        setSuccess(false)
+    }
 
     return (
         <>
@@ -174,16 +270,20 @@ const UpdateCategory = (props) => {
                     
                     <div className="categoryInput">
                         <div htmlFor="category" className="my-2 text-xl">Title</div>
-                        <input onChange={handleChange} value={title} type="text" placeholder="Category Title" className="input input-bordered w-full max-w-lg" />
+                        <input onChange={e=>setTitle(e.target.value)} value={title} type="text" placeholder="Category Title" className="input input-bordered w-full max-w-lg" />
                         <div htmlFor="description" className="my-2 text-xl">Description</div>
-                        <input onChange={e=>setDescription(e.target.value)} value={props.description}type="text" placeholder="Description (optional)" className="input input-bordered w-full max-w-lg" />
+                        <input onChange={e=>setDescription(e.target.value)} value={description}type="text" placeholder="Description (optional)" className="input input-bordered w-full max-w-lg" />
                     </div>
 
-                    <button className="btn btn-success mt-2 w-[200px]">UPDATE</button>
+                    <p className={`${success?"":"hidden"} text-success`}>Successfully updated.</p>
+                    <p className={`${failed?"":"hidden"} text-error`}>{message}</p>
+                    <button onClick={handleUpdate} className="btn btn-success mt-2 w-[200px]">
+                        {clicked?<span className="loading loading-dots loading-xs"></span>:"UPDATE"}
+                    </button>
 
                     <div className="modal-action">
                         <form method="dialog">
-                            <button className="btn">Close</button>
+                            <button onClick={handleClose} className="btn">Close</button>
                         </form>
                     </div>
                 </div>
@@ -193,10 +293,39 @@ const UpdateCategory = (props) => {
 }
 
 const DeleteCategory = (props) => {
+    const navigate = useNavigate()
+    const {logout} = useAuth()
+    const [failed,setFailed] = useState(false)
+    const [clicked,setClicked] = useState(false)
+    const [message, setMessage] = useState("Failed to delete.")
+
     const handleDelete = (event)=>{
-        // console.log(props.id);
-        // event.target.parentElement.parentElement.parentElement.remove()
-        console.log(event.target.closest('tr').remove());
+        setFailed(false)
+        setClicked(true)
+
+        const url = `/admin/category/${props.id}/`
+        deleteToken(url)
+        .then(data=>{
+            if(data.status===204){
+                navigate(`/category?removed=${props.title}`) 
+            }
+        }).catch(error=>{
+            setFailed(true)
+            setClicked(false)
+            if(error.response){
+                if(error.response.status===401){
+                  logout()
+                }else if(error.response.status===500){
+                    setMessage("Products are listed in this category. Delete the products first.")
+                }
+            }else{
+                setMessage("No response from server")
+            }
+        })
+    }
+
+    const handleClose = ()=>{
+        setFailed(false)
     }
     
     return (
@@ -207,16 +336,18 @@ const DeleteCategory = (props) => {
                     
                     <div className="categoryInput">
                         <div htmlFor="category" className="my-2 text-xl">Title</div>
-                        <input value={props.id} disabled type="text" placeholder="Category Title" className="input input-bordered w-full max-w-lg" />
+                        <input value={props.title} disabled type="text" placeholder="Category Title" className="input input-bordered w-full max-w-lg" />
                         <div htmlFor="description" className="my-2 text-xl">Description</div>
-                        <input type="text" disabled placeholder="Description (optional)" className="input input-bordered w-full max-w-lg" />
+                        <input value={props.description} type="text" disabled placeholder="Description (optional)" className="input input-bordered w-full max-w-lg" />
                     </div>
 
-                    <button onClick={handleDelete} className="btn btn-error mt-2 w-[200px]">DELETE</button>
-
+                    <button onClick={handleDelete} className="btn btn-error mt-2 w-[200px]">
+                        {clicked?<span className="loading loading-dots loading-xs"></span>:"DELETE"}
+                    </button>
+                    <p className={`${failed?"":"hidden"} text-error`}>{message}</p>
                     <div className="modal-action">
                         <form method="dialog">
-                            <button className="btn">Close</button>
+                            <button onClick={handleClose} className="btn">Close</button>
                         </form>
                     </div>
                 </div>

@@ -131,5 +131,15 @@ export const patchToken = async (url,data)=>{
         throw error
     }
   }
+
   
 
+export const deleteToken = async (url)=>{
+    const axiosInstanceToken = AxiosInstanceToken()
+    try{
+        const response =  await axiosInstanceToken.delete(url)
+        return response
+    }catch(error){
+        throw error
+    }
+  }
