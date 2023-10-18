@@ -48,7 +48,7 @@ const BalanceTables = () => {
     // Set the page number according to reload/search/next/prev as the naviagate to new url
     useEffect(() => {
         const newUrl = new URL(`http://.../${location.search}`)
-        
+        setSearch(newUrl.searchParams.get("search"))
         // Set page data accoriding to offset
         if(newUrl.searchParams.get("offset")===null){
             setPageNumber(1)
@@ -172,7 +172,7 @@ const BalanceTables = () => {
                 </div>
             </div>
             <div className={`${styles.BalanceTables} flex items-center px-3 bg-[#F2F2F2]`}>
-                <input onChange={e=>setSearch(e.target.value)} type="text" placeholder="Username" className="input input-bordered rounded-none w-full max-w-lg" />
+                <input value={search} onChange={e=>setSearch(e.target.value)} type="text" placeholder="Username" className="input input-bordered rounded-none w-full max-w-lg" />
                 <div onClick={handleSearch} className="btn btn-success rounded-none  ml-2 w-[100px]">
                     Search
                 </div>
