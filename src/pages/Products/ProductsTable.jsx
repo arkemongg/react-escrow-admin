@@ -31,7 +31,7 @@ const ProductsTable = () => {
 
     // Search input
     const [search, setSearch] = useState("")
-    
+
     // Navigate new url because it should be stored in memory so go back/forward will work
     const navigate = useNavigate()
 
@@ -46,14 +46,14 @@ const ProductsTable = () => {
     const [pageNumber, setPageNumber] = useState(1)
 
     // Set the page number according to reload/search/next/prev as the naviagate to new url
-    
+
     //Filter status
-    const [filterValue,setFilterValue] = useState("")
+    const [filterValue, setFilterValue] = useState("")
     useEffect(() => {
         const newUrl = new URL(`http://.../${location.search}`)
         //set search value
-        setSearch(newUrl.searchParams.get("search")===null?"":newUrl.searchParams.get("search"))
-        setFilterValue(newUrl.searchParams.get("featured")===null?"":newUrl.searchParams.get("featured"))
+        setSearch(newUrl.searchParams.get("search") === null ? "" : newUrl.searchParams.get("search"))
+        setFilterValue(newUrl.searchParams.get("featured") === null ? "" : newUrl.searchParams.get("featured"))
         // Set page data accoriding to offset
         if (newUrl.searchParams.get("offset") === null) {
             setPageNumber(1)
@@ -130,7 +130,7 @@ const ProductsTable = () => {
         navigate(`${newUrl.search}`)//navigate url genrated by api
 
     }
-    
+
     const handleNext = () => {
         if (nextUrl === null) {
             return;
@@ -155,10 +155,10 @@ const ProductsTable = () => {
         }
         navigate(`${newUrl.search}`) //navigate to url
     }
-    
-    const handleFilter = (event)=>{
+
+    const handleFilter = (event) => {
         setFilterValue(event.target.value)
-        
+
         navigate(`?featured=${event.target.value}`)
     }
 
@@ -170,7 +170,7 @@ const ProductsTable = () => {
                 </div>
             </div>
             <div className={`${styles.ProductsTable} flex items-center px-3 bg-[#F2F2F2]`}>
-                <input value={search} onChange={e=>setSearch(e.target.value)} type="text" placeholder="USERNAME / PRODUCTS ID" className="input input-bordered rounded-none w-full max-w-lg" />
+                <input value={search} onChange={e => setSearch(e.target.value)} type="text" placeholder="USERNAME / PRODUCTS ID" className="input input-bordered rounded-none w-full max-w-lg" />
                 <div onClick={handleSearch} className="btn btn-success rounded-none  ml-2 w-[100px]">
                     Search
                 </div>
@@ -198,7 +198,7 @@ const ProductsTable = () => {
                             <th>SALES</th>
                             <th>VIEW COUNT</th>
                             <th>FEATURED</th>
-                            
+
                             <th className='min-w-[370px]'>EDIT</th>
                         </tr>
                     </thead>
@@ -212,10 +212,10 @@ const ProductsTable = () => {
                                 description={product.description}
                                 image={product.image}
                                 price={product.price}
-                                inventory = {product.inventory}
-                                sales = {product.sales}
-                                featured = {product.featured}
-                                view_count = {product.view_count}
+                                inventory={product.inventory}
+                                sales={product.sales}
+                                featured={product.featured}
+                                view_count={product.view_count}
                             />
                         }) : <tr></tr>}
                     </tbody>
@@ -247,7 +247,7 @@ const ProductsTable = () => {
 export default ProductsTable
 
 const Row = (props) => {
-    var img = apiUrl+props.image;
+    var img = apiUrl + props.image;
     const handleFeatured = (event) => {
         document.getElementById(`featuredmodal${props.id}`).showModal()
     }
@@ -271,15 +271,15 @@ const Row = (props) => {
                 <td>{props.username}</td>
                 <td>{props.sales}</td>
                 <td>{props.view_count}</td>
-                <td>{props.featured?"YES":"NO"}</td>
-                
+                <td>{props.featured ? "YES" : "NO"}</td>
+
                 <td>
-                    {props.featured? <span onClick={handleRemoveFeatured} className='btn btn-error w-[170px] btn-sm' >REMOVE FEATURED</span> :<span onClick={handleFeatured} className='btn btn-success w-[170px] btn-sm' >MARK AS FEATURED</span>}
+                    {props.featured ? <span onClick={handleRemoveFeatured} className='btn btn-error w-[170px] btn-sm' >REMOVE FEATURED</span> : <span onClick={handleFeatured} className='btn btn-success w-[170px] btn-sm' >MARK AS FEATURED</span>}
                     <span onClick={handleDelist} className='btn btn-error w-[160px] ml-2 btn-sm' >DELIST</span>
                 </td>
                 <td>
-                    {props.featured?<RemoveFeaturedProduct id={props.id} image = {img} title = {props.title} username = {props.username} />:<FeaturedProduct id={props.id} image = {img} title = {props.title} username = {props.username} />}
-                    <DelistProduct id={props.id} image = {img} title = {props.title} username = {props.username} />
+                    {props.featured ? <RemoveFeaturedProduct id={props.id} image={img} title={props.title} username={props.username} /> : <FeaturedProduct id={props.id} image={img} title={props.title} username={props.username} />}
+                    <DelistProduct id={props.id} image={img} title={props.title} username={props.username} />
                 </td>
             </tr>
         </>
@@ -290,41 +290,47 @@ const Row = (props) => {
 const FeaturedProduct = (props) => {
     // const location = useLocation();
     const { logout } = useAuth()
-    const [message ,setMessage] = ["Error."]
+    const [message, setMessage] = ["Error."]
+    const [clicked, setClicked] = useState(false)
+
     // Navigate new url because it should be stored in memory so go back/forward will work
     // const navigate = useNavigate()
 
-    const [success,setSuccess] = useState(false)
-    const [err,setErr] = useState(false)
-    const handleFeatured = ()=>{
+    const [success, setSuccess] = useState(false)
+    const [err, setErr] = useState(false)
+    const handleFeatured = () => {
+        setClicked(true)
         const patchData = {
             "featured": true,
         }
         const url = `/admin/products/${props.id}/`
-        putToken(url,patchData)
-        .then(data=>{
-            // const newUrl = new URL(`http://.../${location.search}`)
-            // newUrl.searchParams.set("updated",props.title+Math.random(1))
-            // navigate(newUrl.search)
-            if(data.status===200){
-                setSuccess(true)
-            }
-
-        }).catch(error=>{
-            setErr(true)
-            if(error.response){
-                if(error.response.status===401){
-                  logout()
-                }else if(error.response.status===400){
-                    setMessage("Unexpected error.")
+        putToken(url, patchData)
+            .then(data => {
+                // const newUrl = new URL(`http://.../${location.search}`)
+                // newUrl.searchParams.set("updated",props.title+Math.random(1))
+                // navigate(newUrl.search)
+                if (data.status === 200) {
+                    setSuccess(true)
                 }
-            }else{
-                setMessage("No response from server")
-            }
-        })
+                setClicked(false)
+
+
+            }).catch(error => {
+                setErr(true)
+                if (error.response) {
+                    if (error.response.status === 401) {
+                        logout()
+                    } else if (error.response.status === 400) {
+                        setMessage("Unexpected error.")
+                    }
+                } else {
+                    setMessage("No response from server")
+                }
+                setClicked(false)
+            })
     }
 
-    const handleClose = ()=>{
+    const handleClose = () => {
         setSuccess(false)
         setErr(false)
     }
@@ -350,9 +356,12 @@ const FeaturedProduct = (props) => {
 
 
                     </div>
-                    <p className={`text-success  ${success?'':'hidden'}`}>Successfully updated.</p>
-                    <p className={`text-error  ${err?'':'hidden'}`}>{message}</p>
-                    <button onClick={handleFeatured} className="btn btn-success mt-2 w-[200px]">MARK AS FEATURED</button>
+                    <p className={`text-success  ${success ? '' : 'hidden'}`}>Successfully updated.</p>
+                    <p className={`text-error  ${err ? '' : 'hidden'}`}>{message}</p>
+                    <button onClick={handleFeatured} className="btn btn-success mt-2 w-[200px]">
+                        {clicked ? <span className="loading loading-dots loading-xs"></span> : "MARK AS FEATURED"}
+
+                    </button>
 
                     <div className="modal-action">
                         <form method="dialog">
@@ -365,43 +374,47 @@ const FeaturedProduct = (props) => {
     )
 }
 const DelistProduct = (props) => {
-       // const location = useLocation();
-   const { logout } = useAuth()
-   const [message ,setMessage] = ["Error."]
-   // Navigate new url because it should be stored in memory so go back/forward will work
-   // const navigate = useNavigate()
+    // const location = useLocation();
+    const { logout } = useAuth()
+    const [message, setMessage] = useState("Error.")
+    const [clicked, setClicked] = useState(false)
+    // Navigate new url because it should be stored in memory so go back/forward will work
+    // const navigate = useNavigate()
 
-   const [success,setSuccess] = useState(false)
-   const [err,setErr] = useState(false)
-   const handleDelist = ()=>{
-       const patchData = {
-           "expired": true,
-       }
-       const url = `/admin/products/${props.id}/`
-       putToken(url,patchData)
-       .then(data=>{
-           if(data.status===200){
-               setSuccess(true)
-           }
+    const [success, setSuccess] = useState(false)
+    const [err, setErr] = useState(false)
+    const handleDelist = () => {
+        setClicked(true)
+        const patchData = {
+            "expired": true,
+        }
+        const url = `/admin/products/${props.id}/`
+        putToken(url, patchData)
+            .then(data => {
+                if (data.status === 200) {
+                    setSuccess(true)
+                    setClicked(false)
+                }
 
-       }).catch(error=>{
-           setErr(true)
-           if(error.response){
-               if(error.response.status===401){
-                 logout()
-               }else if(error.response.status===400){
-                   setMessage("Unexpected error.")
-               }
-           }else{
-               setMessage("No response from server")
-           }
-       })
-   }
+            }).catch(error => {
+                setErr(true)
+                if (error.response) {
+                    if (error.response.status === 401) {
+                        logout()
+                    } else if (error.response.status === 400) {
+                        setMessage("Unexpected error.")
+                    }
+                } else {
+                    setMessage("No response from server")
+                }
+                setClicked(false)
+            })
+    }
 
-   const handleClose = ()=>{
-       setSuccess(false)
-       setErr(false)
-   }
+    const handleClose = () => {
+        setSuccess(false)
+        setErr(false)
+    }
     return (
         <>
 
@@ -423,9 +436,11 @@ const DelistProduct = (props) => {
                         <input value={props.username} disabled type="text" placeholder="Username" className="input input-bordered w-full max-w-lg mb-2" />
 
                     </div>
-                    <p className={`text-success  ${success?'':'hidden'}`}>Successfully updated.</p>
-                    <p className={`text-error  ${err?'':'hidden'}`}>{message}</p>
-                    <button onClick={handleDelist} className="btn btn-error mt-2 w-[200px]">DELIST</button>
+                    <p className={`text-success  ${success ? '' : 'hidden'}`}>Successfully updated.</p>
+                    <p className={`text-error  ${err ? '' : 'hidden'}`}>{message}</p>
+                    <button onClick={handleDelist} className="btn btn-error mt-2 w-[200px]">
+                        {clicked ? <span className="loading loading-dots loading-xs"></span> : "DELIST"}
+                    </button>
 
                     <div className="modal-action">
                         <form method="dialog">
@@ -439,43 +454,47 @@ const DelistProduct = (props) => {
 }
 
 const RemoveFeaturedProduct = (props) => {
-   // const location = useLocation();
-   const { logout } = useAuth()
-   const [message ,setMessage] = ["Error."]
-   // Navigate new url because it should be stored in memory so go back/forward will work
-   // const navigate = useNavigate()
+    // const location = useLocation();
+    const { logout } = useAuth()
+    const [message, setMessage] = useState("Error.")
+    const [clicked, setClicked] = useState(false)
 
-   const [success,setSuccess] = useState(false)
-   const [err,setErr] = useState(false)
-   const handleRemoveFeatured = ()=>{
-       const patchData = {
-           "featured": false,
-       }
-       const url = `/admin/products/${props.id}/`
-       putToken(url,patchData)
-       .then(data=>{
-           if(data.status===200){
-               setSuccess(true)
-           }
+    // Navigate new url because it should be stored in memory so go back/forward will work
+    // const navigate = useNavigate()
 
-       }).catch(error=>{
-           setErr(true)
-           if(error.response){
-               if(error.response.status===401){
-                 logout()
-               }else if(error.response.status===400){
-                   setMessage("Unexpected error.")
-               }
-           }else{
-               setMessage("No response from server")
-           }
-       })
-   }
+    const [success, setSuccess] = useState(false)
+    const [err, setErr] = useState(false)
+    const handleRemoveFeatured = () => {
+        setClicked(true)
+        const patchData = {
+            "featured": false,
+        }
+        const url = `/admin/products/${props.id}/`
+        putToken(url, patchData)
+            .then(data => {
+                if (data.status === 200) {
+                    setSuccess(true)
+                }
+                setClicked(false)
+            }).catch(error => {
+                setErr(true)
+                if (error.response) {
+                    if (error.response.status === 401) {
+                        logout()
+                    } else if (error.response.status === 400) {
+                        setMessage("Unexpected error.")
+                    }
+                } else {
+                    setMessage("No response from server")
+                }
+                setClicked(false)
+            })
+    }
 
-   const handleClose = ()=>{
-       setSuccess(false)
-       setErr(false)
-   }
+    const handleClose = () => {
+        setSuccess(false)
+        setErr(false)
+    }
     return (
         <>
 
@@ -497,9 +516,11 @@ const RemoveFeaturedProduct = (props) => {
                         <input value={props.username} disabled type="text" placeholder="Username" className="input input-bordered w-full max-w-lg mb-2" />
 
                     </div>
-                    <p className={`text-success  ${success?'':'hidden'}`}>Successfully updated.</p>
-                    <p className={`text-error  ${err?'':'hidden'}`}>{message}</p>
-                    <button onClick={handleRemoveFeatured} className="btn btn-error mt-2 w-[200px]">REMOVE FEATURED</button>
+                    <p className={`text-success  ${success ? '' : 'hidden'}`}>Successfully updated.</p>
+                    <p className={`text-error  ${err ? '' : 'hidden'}`}>{message}</p>
+                    <button onClick={handleRemoveFeatured} className="btn btn-error mt-2 w-[200px]">
+                        {clicked ? <span className="loading loading-dots loading-xs"></span> : "REMOVE FEATURED"}
+                    </button>
 
                     <div className="modal-action">
                         <form method="dialog">
