@@ -31,9 +31,9 @@ const WithdrawalsTable = () => {
                         <tr>
                             <th>#</th>
                             <th>USERNAME</th>
-                            <th>CUSTOMER NAME</th>
-                            <th>AMOUNT</th>
-                            <th>FEE</th>
+                            <th>TOTAL AMOUNT</th>
+                            <th>AMOUNT TO PAY</th>
+                            <th>FEE %</th>
                             <th>COIN TYPE</th>
                             <th>WITHDRAWAL ADDRESS</th>
                             <th>STATUS</th>
@@ -117,21 +117,24 @@ const CompelteWithdrawals = (props) => {
                         <div htmlFor="username" className="my-2 text-xl">Username</div>
                         <input value={props.data} disabled type="text" placeholder="Username" className="input input-bordered w-full max-w-lg" />
 
-                        <div htmlFor="Customer Name" className="my-2 text-xl">Customer Name</div>
-                        <input type="text" disabled placeholder="Customer Name" className="input input-bordered w-full max-w-lg" />
+                        <div className="my-2 text-xl">Total Amount</div>
+                        <input type="text" disabled placeholder="Total Amount" className="input input-bordered w-full max-w-lg" />
                         
-                        <div htmlFor="amount" className="my-2 text-xl">Amount</div>
+                        <div htmlFor="amount" className="my-2 text-xl">Amount to pay</div>
                         <input value={props.data} disabled type="text" placeholder="Amount" className="input input-bordered w-full max-w-lg" />
 
-                        <div htmlFor="fee" className="my-2 text-xl">Fee</div>
+                        <div htmlFor="fee" className="my-2 text-xl">Fee %</div>
                         <input value={props.data} disabled type="text" placeholder="Fee" className="input input-bordered w-full max-w-lg" />
                         
                         
                         <div htmlFor="status" className="my-2 text-xl">Coin Type</div>
                         <input type="text" disabled placeholder="Status" className="input input-bordered w-full max-w-lg" />
                         
-                        <div htmlFor="createdat" className="my-2 text-xl">Address</div>
+                        <div className="my-2 text-xl">Address</div>
                         <input type="text" value={"Loremipsumdolorsitametconsecteturadipisicingelit.Earumrationepariaturquaeipsamolestiaeprovidentaspernaturabeaqueodioquasi."} disabled placeholder="created at" className="input input-bordered w-full max-w-lg" />
+                        
+                        <div className="my-2 text-xl">TXID</div>
+                        <input type="text" placeholder="TXID" className="input input-bordered w-full max-w-lg" />
                        
                     </div>
 
@@ -160,13 +163,12 @@ const FailedWithdrawals = (props) => {
                     <div className="categoryInput">
                         <div htmlFor="username" className="my-2 text-xl">Username</div>
                         <input value={props.data} disabled type="text" placeholder="Username" className="input input-bordered w-full max-w-lg" />
-
-                        <div htmlFor="Customer Name" className="my-2 text-xl">Customer Name</div>
-                        <input type="text" disabled placeholder="Customer Name" className="input input-bordered w-full max-w-lg" />
+                        <div className="my-2 text-xl">Total Amount</div>
+                        <input type="text" disabled placeholder="Total Amount" className="input input-bordered w-full max-w-lg" />
                         
-                        <div htmlFor="amount" className="my-2 text-xl">Amount</div>
+                        <div htmlFor="amount" className="my-2 text-xl">Amount to pay</div>
                         <input value={props.data} disabled type="text" placeholder="Amount" className="input input-bordered w-full max-w-lg" />
-                        
+
                         <div htmlFor="fee" className="my-2 text-xl">Fee</div>
                         <input value={props.data} disabled type="text" placeholder="Fee" className="input input-bordered w-full max-w-lg" />
                         
