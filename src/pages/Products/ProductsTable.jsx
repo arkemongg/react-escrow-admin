@@ -290,7 +290,7 @@ const Row = (props) => {
 const FeaturedProduct = (props) => {
     // const location = useLocation();
     const { logout } = useAuth()
-    const [message, setMessage] = ["Error."]
+    const [message, setMessage] = useState("Error.")
     const [clicked, setClicked] = useState(false)
 
     // Navigate new url because it should be stored in memory so go back/forward will work

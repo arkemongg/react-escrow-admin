@@ -219,7 +219,7 @@ const DepositsTable = () => {
                     {<LoadingArea />}
                 </div>
                 <div className={`w-[100%] h-[700px] ${fetched && data.length < 1 ? "" : "hidden"}`}>
-                    {<EmptyMessage message={"No user found."} />}
+                    {<EmptyMessage message={"No deposit found."} />}
                 </div>
             </div>
             {/* Handle pagination */}
