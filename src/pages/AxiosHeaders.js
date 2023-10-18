@@ -132,7 +132,15 @@ export const patchToken = async (url,data)=>{
     }
   }
 
-  
+  export const putToken = async (url,data)=>{
+    const axiosInstanceToken = AxiosInstanceToken()
+    try{
+        const response =  await axiosInstanceToken.patch(url,data)
+        return response
+    }catch(error){
+        throw error
+    }
+  }
 
 export const deleteToken = async (url)=>{
     const axiosInstanceToken = AxiosInstanceToken()

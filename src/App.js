@@ -14,6 +14,7 @@ import Orders from './pages/Orders';
 import Products from './pages/Products';
 import Verifications from './pages/Verification';
 import Login from './pages/Login';
+import ScrollToTop from './ScrollToTop';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
     <>
     <AuthProvider>
       <BrowserRouter>
+        <ScrollToTop>
         <Routes>
           <Route path="/" element={<Navigation />}>
             <Route path="login" element={<Login />} />
@@ -36,6 +38,7 @@ function App() {
             <Route path='verifications' element={< Verifications />} />
           </Route>
         </Routes>
+        </ScrollToTop>
       </BrowserRouter>
       </AuthProvider>
     </>

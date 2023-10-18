@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './styles/ProductsTable.module.css'
 import { useAuth } from '../../AuthContext';
 import { useEffect, useState } from 'react';
-import { getToken } from '../AxiosHeaders';
+import { getToken, patchToken, putToken } from '../AxiosHeaders';
 import { EmptyMessage } from '../GlobalTemplates/Empty';
 import LoadingArea from '../GlobalTemplates/LoadingArea';
 import { apiUrl } from '../Urls';
@@ -46,10 +46,14 @@ const ProductsTable = () => {
     const [pageNumber, setPageNumber] = useState(1)
 
     // Set the page number according to reload/search/next/prev as the naviagate to new url
+    
+    //Filter status
+    const [filterValue,setFilterValue] = useState("")
     useEffect(() => {
         const newUrl = new URL(`http://.../${location.search}`)
         //set search value
-        setSearch(newUrl.searchParams.get("search"))
+        setSearch(newUrl.searchParams.get("search")===null?"":newUrl.searchParams.get("search"))
+        setFilterValue(newUrl.searchParams.get("featured")===null?"":newUrl.searchParams.get("featured"))
         // Set page data accoriding to offset
         if (newUrl.searchParams.get("offset") === null) {
             setPageNumber(1)
@@ -126,6 +130,7 @@ const ProductsTable = () => {
         navigate(`${newUrl.search}`)//navigate url genrated by api
 
     }
+    
     const handleNext = () => {
         if (nextUrl === null) {
             return;
@@ -150,6 +155,13 @@ const ProductsTable = () => {
         }
         navigate(`${newUrl.search}`) //navigate to url
     }
+    
+    const handleFilter = (event)=>{
+        setFilterValue(event.target.value)
+        
+        navigate(`?featured=${event.target.value}`)
+    }
+
     return (
         <>
             <div className={`${styles.ProductsTable} flex justify-between items-center px-3`}>
@@ -164,10 +176,10 @@ const ProductsTable = () => {
                 </div>
             </div>
             <div className={`${styles.ProductsTable} flex items-center px-3`}>
-                <select className="select select-bordered rounded-none w-full max-w-lg">
-                    <option disabled selected>Filter</option>
-                    <option>FEATURED</option>
-                    <option>NOT_FEATURED</option>
+                <select onChange={handleFilter} value={filterValue} className="select select-bordered rounded-none w-full max-w-lg">
+                    <option value={""}>Filter</option>
+                    <option value={true}>FEATURED</option>
+                    <option value={false}>NOT_FEATURED</option>
                 </select>
             </div>
 
@@ -239,6 +251,9 @@ const Row = (props) => {
     const handleFeatured = (event) => {
         document.getElementById(`featuredmodal${props.id}`).showModal()
     }
+    const handleRemoveFeatured = (event) => {
+        document.getElementById(`removemodal${props.id}`).showModal()
+    }
     const handleDelist = (event) => {
         document.getElementById(`delistmodal${props.id}`).showModal()
     }
@@ -259,11 +274,11 @@ const Row = (props) => {
                 <td>{props.featured?"YES":"NO"}</td>
                 
                 <td>
-                    {props.featured? <span onClick={handleFeatured} className='btn btn-error w-[170px] btn-sm' >REMOVE FEATURED</span> :<span onClick={handleFeatured} className='btn btn-success w-[170px] btn-sm' >MARK AS FEATURED</span>}
+                    {props.featured? <span onClick={handleRemoveFeatured} className='btn btn-error w-[170px] btn-sm' >REMOVE FEATURED</span> :<span onClick={handleFeatured} className='btn btn-success w-[170px] btn-sm' >MARK AS FEATURED</span>}
                     <span onClick={handleDelist} className='btn btn-error w-[160px] ml-2 btn-sm' >DELIST</span>
                 </td>
                 <td>
-                    <FeaturedProduct id={props.id} image = {img} title = {props.title} username = {props.username} />
+                    {props.featured?<RemoveFeaturedProduct id={props.id} image = {img} title = {props.title} username = {props.username} />:<FeaturedProduct id={props.id} image = {img} title = {props.title} username = {props.username} />}
                     <DelistProduct id={props.id} image = {img} title = {props.title} username = {props.username} />
                 </td>
             </tr>
@@ -273,6 +288,46 @@ const Row = (props) => {
 
 
 const FeaturedProduct = (props) => {
+    // const location = useLocation();
+    const { logout } = useAuth()
+    const [message ,setMessage] = ["Error."]
+    // Navigate new url because it should be stored in memory so go back/forward will work
+    // const navigate = useNavigate()
+
+    const [success,setSuccess] = useState(false)
+    const [err,setErr] = useState(false)
+    const handleFeatured = ()=>{
+        const patchData = {
+            "featured": true,
+        }
+        const url = `/admin/products/${props.id}/`
+        putToken(url,patchData)
+        .then(data=>{
+            // const newUrl = new URL(`http://.../${location.search}`)
+            // newUrl.searchParams.set("updated",props.title+Math.random(1))
+            // navigate(newUrl.search)
+            if(data.status===200){
+                setSuccess(true)
+            }
+
+        }).catch(error=>{
+            setErr(true)
+            if(error.response){
+                if(error.response.status===401){
+                  logout()
+                }else if(error.response.status===400){
+                    setMessage("Unexpected error.")
+                }
+            }else{
+                setMessage("No response from server")
+            }
+        })
+    }
+
+    const handleClose = ()=>{
+        setSuccess(false)
+        setErr(false)
+    }
     return (
         <>
 
@@ -295,12 +350,13 @@ const FeaturedProduct = (props) => {
 
 
                     </div>
-
-                    <button className="btn btn-success mt-2 w-[200px]">MARK AS FEATURED</button>
+                    <p className={`text-success  ${success?'':'hidden'}`}>Successfully updated.</p>
+                    <p className={`text-error  ${err?'':'hidden'}`}>{message}</p>
+                    <button onClick={handleFeatured} className="btn btn-success mt-2 w-[200px]">MARK AS FEATURED</button>
 
                     <div className="modal-action">
                         <form method="dialog">
-                            <button className="btn">Close</button>
+                            <button onClick={handleClose} className="btn">Close</button>
                         </form>
                     </div>
                 </div>
@@ -309,6 +365,43 @@ const FeaturedProduct = (props) => {
     )
 }
 const DelistProduct = (props) => {
+       // const location = useLocation();
+   const { logout } = useAuth()
+   const [message ,setMessage] = ["Error."]
+   // Navigate new url because it should be stored in memory so go back/forward will work
+   // const navigate = useNavigate()
+
+   const [success,setSuccess] = useState(false)
+   const [err,setErr] = useState(false)
+   const handleDelist = ()=>{
+       const patchData = {
+           "expired": true,
+       }
+       const url = `/admin/products/${props.id}/`
+       putToken(url,patchData)
+       .then(data=>{
+           if(data.status===200){
+               setSuccess(true)
+           }
+
+       }).catch(error=>{
+           setErr(true)
+           if(error.response){
+               if(error.response.status===401){
+                 logout()
+               }else if(error.response.status===400){
+                   setMessage("Unexpected error.")
+               }
+           }else{
+               setMessage("No response from server")
+           }
+       })
+   }
+
+   const handleClose = ()=>{
+       setSuccess(false)
+       setErr(false)
+   }
     return (
         <>
 
@@ -324,19 +417,93 @@ const DelistProduct = (props) => {
                             <img className='w-[328px] h-[250px] m-auto ' src={props.image} alt="image" />
                         </div>
                         <div className="my-2 text-xl">Title</div>
-                        <input value={props.data} disabled type="text" placeholder="Title" className="input input-bordered w-full max-w-lg" />
+                        <input value={props.title} disabled type="text" placeholder="Title" className="input input-bordered w-full max-w-lg" />
 
                         <div className="my-2 text-xl">Seller Username</div>
-                        <input value={props.data} disabled type="text" placeholder="Username" className="input input-bordered w-full max-w-lg mb-2" />
-
+                        <input value={props.username} disabled type="text" placeholder="Username" className="input input-bordered w-full max-w-lg mb-2" />
 
                     </div>
-
-                    <button className="btn btn-error mt-2 w-[200px]">DELIST</button>
+                    <p className={`text-success  ${success?'':'hidden'}`}>Successfully updated.</p>
+                    <p className={`text-error  ${err?'':'hidden'}`}>{message}</p>
+                    <button onClick={handleDelist} className="btn btn-error mt-2 w-[200px]">DELIST</button>
 
                     <div className="modal-action">
                         <form method="dialog">
-                            <button className="btn">Close</button>
+                            <button onClick={handleClose} className="btn">Close</button>
+                        </form>
+                    </div>
+                </div>
+            </dialog>
+        </>
+    )
+}
+
+const RemoveFeaturedProduct = (props) => {
+   // const location = useLocation();
+   const { logout } = useAuth()
+   const [message ,setMessage] = ["Error."]
+   // Navigate new url because it should be stored in memory so go back/forward will work
+   // const navigate = useNavigate()
+
+   const [success,setSuccess] = useState(false)
+   const [err,setErr] = useState(false)
+   const handleRemoveFeatured = ()=>{
+       const patchData = {
+           "featured": false,
+       }
+       const url = `/admin/products/${props.id}/`
+       putToken(url,patchData)
+       .then(data=>{
+           if(data.status===200){
+               setSuccess(true)
+           }
+
+       }).catch(error=>{
+           setErr(true)
+           if(error.response){
+               if(error.response.status===401){
+                 logout()
+               }else if(error.response.status===400){
+                   setMessage("Unexpected error.")
+               }
+           }else{
+               setMessage("No response from server")
+           }
+       })
+   }
+
+   const handleClose = ()=>{
+       setSuccess(false)
+       setErr(false)
+   }
+    return (
+        <>
+
+            <dialog id={`removemodal${props.id}`} className="modal">
+                <div className="modal-box">
+                    <h3 className="font-bold text-lg">Delist Product
+                        <br />
+                        ID#:{props.id}
+                    </h3>
+
+                    <div className="productInput">
+                        <div className="my-2 ">
+                            <img className='w-[328px] h-[250px] m-auto ' src={props.image} alt="image" />
+                        </div>
+                        <div className="my-2 text-xl">Title</div>
+                        <input value={props.title} disabled type="text" placeholder="Title" className="input input-bordered w-full max-w-lg" />
+
+                        <div className="my-2 text-xl">Seller Username</div>
+                        <input value={props.username} disabled type="text" placeholder="Username" className="input input-bordered w-full max-w-lg mb-2" />
+
+                    </div>
+                    <p className={`text-success  ${success?'':'hidden'}`}>Successfully updated.</p>
+                    <p className={`text-error  ${err?'':'hidden'}`}>{message}</p>
+                    <button onClick={handleRemoveFeatured} className="btn btn-error mt-2 w-[200px]">REMOVE FEATURED</button>
+
+                    <div className="modal-action">
+                        <form method="dialog">
+                            <button onClick={handleClose} className="btn">Close</button>
                         </form>
                     </div>
                 </div>
