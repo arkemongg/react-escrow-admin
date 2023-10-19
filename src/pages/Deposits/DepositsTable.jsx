@@ -36,7 +36,7 @@ const DepositsTable = () => {
     const navigate = useNavigate()
 
     // SET API URL FOR DATA
-    const [url, setUrl] = useState(location.search === "" ? '/admin/transactions/?search=&&limit=10' : `/admin/transactions/${location.search}`)
+    const [url, setUrl] = useState(location.search === "" ? '/admin/transactions/' : `/admin/transactions/${location.search}`)
     // next from api
     const [nextUrl, setNexturl] = useState(null)
 

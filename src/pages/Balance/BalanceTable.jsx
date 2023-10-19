@@ -36,7 +36,7 @@ const BalanceTables = () => {
     const navigate = useNavigate()
 
     // SET API URL FOR DATA
-    const [url,setUrl] = useState(location.search===""?'/admin/balance/?search=&&limit=10':`/admin/balance/${location.search}`)
+    const [url,setUrl] = useState(location.search===""?'/admin/balance/':`/admin/balance/${location.search}`)
     // next from api
     const [nextUrl,setNexturl] = useState(null)
 

@@ -251,16 +251,16 @@ const WithdrawalsTable = () => {
 export default WithdrawalsTable
 
 const Row = (props) => {
-    const escrow_pending = <div className='bg-warning text-sm text-white w-[100px] rounded text-center'> Pending </div>
-    const escrow_complete = <div className='bg-success text-sm text-white w-[100px] rounded text-center'> Complete </div>
-    const escrow_failed = <div className='bg-error text-sm text-white w-[100px] rounded text-center'> Failed </div>
+    const withdraw_pending = <div className='bg-warning text-sm text-white w-[100px] rounded text-center'> Pending </div>
+    const withdraw_complete = <div className='bg-success text-sm text-white w-[100px] rounded text-center'> Complete </div>
+    const withdraw_failed = <div className='bg-error text-sm text-white w-[100px] rounded text-center'> Failed </div>
 
-    let status = escrow_pending
+    let status = withdraw_pending
 
     if (props.status === 'F') {
-        status = escrow_failed
+        status = withdraw_failed
     } else if (props.status === 'C') {
-        status = escrow_complete
+        status = withdraw_complete
     }
     const handleComplete = (event) => {
         document.getElementById(`completemodal${props.id}`).showModal()
@@ -324,52 +324,72 @@ const Row = (props) => {
 
 const CompelteWithdrawals = (props) => {
     // const location = useLocation();
+    //logout when invalid token
     const { logout } = useAuth()
+
+    //error message
     const [message, setMessage] = useState("Error.")
+
+    //when clicked confirmed btn
     const [clicked, setClicked] = useState(false)
 
     // Navigate new url because it should be stored in memory so go back/forward will work
     // const navigate = useNavigate()
 
+    //patch success
     const [success, setSuccess] = useState(false)
+    //patch error
     const [err, setErr] = useState(false)
 
-
+    //sent tx id to the address
     const [tx, setTX] = useState("-")
 
+    //handle complete btn
     const handleComplete = () => {
+        //clicked true to show the loading animation to btn
         setClicked(true)
+
+        //data to patch
         const patchData = {
             "status": "C",
             "TX_ID": tx
         }
+        //url to api
         const url = `/admin/withdrawals/${props.id}/`
+        //send request
         putToken(url, patchData)
             .then(data => {
                 // const newUrl = new URL(`http://.../${location.search}`)
                 // newUrl.searchParams.set("updated",props.title+Math.random(1))
                 // navigate(newUrl.search)
                 if (data.status === 200) {
+                    //set success
                     setSuccess(true)
                 }
-                setClicked(false)
 
+                //stop loading animation
+                setClicked(false)
 
             }).catch(error => {
                 setErr(true)
                 if (error.response) {
                     if (error.response.status === 401) {
-                        logout()
+                        logout() //logout when invalid token
                     } else if (error.response.status === 400) {
+                        //error message
                         setMessage("Unexpected error /Already updated.")
                     }
                 } else {
+                    //error message
                     setMessage("No response from server")
                 }
+                //stop loading animation
+
                 setClicked(false)
             })
     }
 
+    //close btn to remove the confirmation text
     const handleClose = () => {
         setSuccess(false)
         setErr(false)
@@ -405,8 +425,11 @@ const CompelteWithdrawals = (props) => {
                         <div className="my-2 text-xl">TXID</div>
                         <input onChange={e => setTX(e.target.value)} value={tx} type="text" placeholder="TXID" className="input input-bordered w-full max-w-lg" />
                     </div>
+                    {/* confirmation text */}
                     <p className={`text-success  ${success ? '' : 'hidden'}`}>Successfully updated.</p>
                     <p className={`text-error  ${err ? '' : 'hidden'}`}>{message}</p>
+                    
+                    {/* Handle btn */}
                     <button onClick={handleComplete} className="btn btn-success mt-2 w-[200px]">
 
                         {clicked ? <span className="loading loading-dots loading-xs"></span> : "MARK AS COMPLETE"}
