@@ -6,6 +6,7 @@ import { getToken, patchToken, putToken } from '../AxiosHeaders';
 import { EmptyMessage } from '../GlobalTemplates/Empty';
 import LoadingArea from '../GlobalTemplates/LoadingArea';
 import { apiUrl } from '../Urls';
+import { FlaotingError } from '../GlobalTemplates/FloatingError';
 
 const ProductsTable = () => {
     // Current Location
@@ -164,6 +165,9 @@ const ProductsTable = () => {
 
     return (
         <>
+            {/* floating erromessage */}
+            {err ? <FlaotingError err={err} setErr={setErr} message={message} /> : ""}
+
             <div className={`${styles.ProductsTable} flex justify-between items-center px-3`}>
                 <div className="text-2xl">
                     Products
@@ -360,7 +364,6 @@ const FeaturedProduct = (props) => {
                     <p className={`text-error  ${err ? '' : 'hidden'}`}>{message}</p>
                     <button onClick={handleFeatured} className="btn btn-success mt-2 w-[200px]">
                         {clicked ? <span className="loading loading-dots loading-xs"></span> : "MARK AS FEATURED"}
-
                     </button>
 
                     <div className="modal-action">
