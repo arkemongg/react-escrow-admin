@@ -6,6 +6,7 @@ import { getToken, putToken } from '../AxiosHeaders';
 import LoadingArea from '../GlobalTemplates/LoadingArea';
 import { EmptyMessage } from '../GlobalTemplates/Empty';
 import { apiUrl } from '../Urls';
+import { FlaotingError } from '../GlobalTemplates/FloatingError';
 
 const CustomersTable = () => {
     // Current Location
@@ -159,6 +160,9 @@ const CustomersTable = () => {
 
     return (
         <>
+            {/* floating erromessage */}
+            {err ? <FlaotingError err={err} setErr={setErr} message={message} /> : ""}
+
             <div className={`${styles.CustomersTable} flex justify-between items-center px-3`}>
                 <div className="text-2xl">
                     Customers

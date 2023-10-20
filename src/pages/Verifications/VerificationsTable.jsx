@@ -1,28 +1,191 @@
+import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './styles/VerificationsTable.module.css'
+import { useAuth } from '../../AuthContext';
+import { useEffect, useState } from 'react';
+import { getToken } from '../AxiosHeaders';
+import { FlaotingError } from '../GlobalTemplates/FloatingError';
+import { EmptyMessage } from '../GlobalTemplates/Empty';
+import LoadingArea from '../GlobalTemplates/LoadingArea';
 
 const VerificationsTable = () => {
+    // Current Location
+    const location = useLocation();
+
+    // Logut context
+    const { logout } = useAuth()
+
+    // Check if data fetch comeplte
+    const [fetched, setFetched] = useState(false)
+
+    // Err handle
+    const [err, setErr] = useState(false)
+
+    // Error message
+    const [message, setMessage] = useState("Error.")
+
+    // Count the data to hide next / prev pagenumber go btn
+    const [count, setCount] = useState(0)
+
+    // Data storage
+    const [data, setData] = useState([])
+
+    // Search input
+    const [search, setSearch] = useState("")
+
+    // Navigate new url because it should be stored in memory so go back/forward will work
+    const navigate = useNavigate()
+
+    // SET API URL FOR DATA
+    const [url, setUrl] = useState(location.search === "" ? '/admin/verification/' : `/admin/verification/${location.search}`)
+    // next from api
+    const [nextUrl, setNexturl] = useState(null)
+
+    //prev from api
+    const [previousUrl, setPreviousUrl] = useState(null)
+    // Page number default 1
+    const [pageNumber, setPageNumber] = useState(1)
+
+    // Set the page number according to reload/search/next/prev as the naviagate to new url
+
+    //Filter status
+    const [filterValue, setFilterValue] = useState("")
+    useEffect(() => {
+        const newUrl = new URL(`http://.../${location.search}`)
+        //set search value
+        setSearch(newUrl.searchParams.get("search") === null ? "" : newUrl.searchParams.get("search"))
+        setFilterValue(newUrl.searchParams.get("completed") === null ? "" : newUrl.searchParams.get("completed"))
+        // Set page data accoriding to offset
+        if (newUrl.searchParams.get("offset") === null) {
+            setPageNumber(1)
+        } else {
+            let pageNumber = newUrl.searchParams.get("offset") / 10
+            setPageNumber(pageNumber + 1)
+        }
+        //set the url to fetch the data
+        setUrl(`/admin/verification/${location.search}`)
+        return () => { };
+    }, [location.key]); //location.key change by navigate
+
+    // Fetchdata
+    useEffect(() => {
+        // Set fetched = false
+        setFetched(false)
+
+        // fetch the data 
+        getToken(url)
+            .then(response => {
+                if (response.status === 200) {
+                    // Set data
+                    setCount(response.data.count)
+                    setData(response.data.results)
+                    setFetched(true)
+
+                    // Next prev url set
+
+                    setNexturl(response.data.next)
+                    setPreviousUrl(response.data.previous)
+
+                }
+            })
+            .catch(error => {
+                //err handler
+                setErr(true)
+                if (error.response) {
+                    //401 = unauthoirized
+                    if (error.response.status === 401) {
+                        logout()
+                    } else {
+                        //any other error
+                        setMessage("Unexprected error.")
+                    }
+                } else {
+                    // backend down
+                    setMessage("No response received from the server.")
+                }
+            });
+
+        return () => {
+        };
+
+    }, [url]); // on url change
+
+    //hamdle search
+    const handleSearch = () => {
+        setCount(0)
+        setPageNumber(1)
+        const newUrl = new URL('http://....com' + url) // used dummy main url because url is only a key
+        newUrl.searchParams.set("search", search)//search input
+        newUrl.searchParams.set("limit", 10) //10 per page
+        newUrl.searchParams.set("key", Math.random(1000)) // key for duplicate url/seacrhes so it will reload on any searches or reloads
+        newUrl.searchParams.delete("offset") // remove page counts / current page and go to first page
+        navigate(`${newUrl.search}`) // navigate to the url
+    }
+
+    const handlePrev = () => {
+        if (previousUrl === null) {
+            return;
+        }
+        const newUrl = new URL(previousUrl) //prev url genrated by api
+
+        navigate(`${newUrl.search}`)//navigate url genrated by api
+
+    }
+
+    const handleNext = () => {
+        if (nextUrl === null) {
+            return;
+        }
+        const newUrl = new URL(nextUrl)//next url genrated by api
+
+        navigate(`${newUrl.search}`)
+
+    }
+
+
+    const handleGo = (event) => {
+        // no entry for invalid pages
+        if (pageNumber < 1 || pageNumber > Math.ceil(count / 10)) {
+            return;
+        }
+        const newUrl = new URL(`http://....com` + url) // dummy url as url is only search params
+        if (pageNumber === 1) {
+            newUrl.searchParams.delete("offset") // page 1 mean no offset
+        } else {
+            newUrl.searchParams.set("offset", (pageNumber - 1) * 10) // offse start from 10 (2nd page)
+        }
+        navigate(`${newUrl.search}`) //navigate to url
+    }
+
+    const handleFilter = (event) => {
+        setFilterValue(event.target.value)
+
+        navigate(`?completed=${event.target.value}`)
+    }
     return (
         <>
+            {/* floating erromessage */}
+            {err ? <FlaotingError err={err} setErr={setErr} message={message} /> : ""}
+
             <div className={`${styles.VerificationsTable} flex justify-between items-center px-3`}>
                 <div className="text-2xl">
                     Verifications
                 </div>
             </div>
             <div className={`${styles.VerificationsTable} flex items-center px-3 bg-[#F2F2F2]`}>
-                <input type="text" placeholder="USERNAME" className="input input-bordered rounded-none w-full max-w-lg" />
-                <div className="btn btn-success rounded-none  ml-2 w-[100px]">
+                <input value={search} onChange={e => setSearch(e.target.value)} type="text" placeholder="USERNAME " className="input input-bordered rounded-none w-full max-w-lg" />
+                <div onClick={handleSearch} className="btn btn-success rounded-none  ml-2 w-[100px]">
                     Search
                 </div>
             </div>
             <div className={`${styles.VerificationsTable} flex items-center px-3`}>
-                <select className="select select-bordered rounded-none w-full max-w-lg">
-                    <option disabled selected>Filter</option>
-                    <option>Pending</option>
-                    <option>COMPLETED</option>
+                <select onChange={handleFilter} value={filterValue} className="select select-bordered rounded-none w-full max-w-lg">
+                    <option value={""}>Filter</option>
+                    <option value={"false"}>PENDING</option>
+                    <option value={"true"}>COMPLETED</option>
                 </select>
             </div>
 
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto min-h-[500px]">
                 <table className="table table-zebra">
                     {/* head */}
                     <thead>
@@ -34,34 +197,43 @@ const VerificationsTable = () => {
                             <th className='min-w-[150px]'>NID BACK</th>
                             <th className='min-w-[150px]'>SELFIE</th>
                             <th>STATUS</th>
-                            <th className='min-w-[360px]'>EDIT</th>
+                            <th className='min-w-[500px]'>EDIT</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <Row />
-                        <Row />
-                        <Row />
-                        <Row />
-                        <Row />
-                        <Row />
-                        <Row />
-                        <Row />
-                        <Row />
-                        <Row />
-                        <Row />
+                        {fetched ? data.map(customer => {
+                            return <Row
+                                key={customer.id}
+                                id={customer.id}
+                                username={customer.username}
+                                fullname={customer.fullname}
+                                nid_verify_front={customer.nid_verify_front}
+                                nid_verify_back={customer.nid_verify_back}
+                                nid_verify_selfie={customer.nid_verify_selfie}
+                                completed={customer.completed}
+                            />
+                        }) : <tr></tr>}
                     </tbody>
                 </table>
-            </div>
-            <div className='btnArea flex justify-center flex-wrap p-5 pb-2'>
-                <div className="btn btn-primary w-[150px]"> Previous </div>
-                <div className="btn btn-primary w-[160px] ml-2"> Next </div>
-            </div>
-            <div className={`flex justify-center items-center p-2 pb-5 `}>
-                <input type="text" placeholder="Page" className={` text-sm p-1 w-[50px] h-[30px] input rounded-none input-bordered`} />
-                <div className="px-3 font-light">
-                    of {10}
+                {/* Handle loading or empty */}
+                <div className={`w-[100%] min-h-[450px] ${fetched ? "hidden" : ""}`}>
+                    {<LoadingArea />}
                 </div>
-                <div className="btn btn-sm btn-primary">Go</div>
+                <div className={`w-[100%] h-[700px] ${fetched && data.length < 1 ? "" : "hidden"}`}>
+                    {<EmptyMessage message={"No user found."} />}
+                </div>
+            </div>
+            {/* Handle pagination */}
+            <div className={`btnArea flex justify-center flex-wrap p-5 pb-2 ${count > 10 ? "" : "hidden"}`}>
+                <div onClick={handlePrev} className="btn btn-primary w-[150px]"> Previous </div>
+                <div onClick={handleNext} className="btn btn-primary w-[160px] ml-2"> Next </div>
+            </div>
+            <div className={`flex justify-center items-center p-2 pb-5 ${count > 10 ? "" : "hidden"}`}>
+                <input onChange={e => setPageNumber(e.target.value)} value={pageNumber} type="text" placeholder="Page" className={` text-sm p-1 w-[50px] h-[30px] input rounded-none input-bordered`} />
+                <div className="px-3 font-light">
+                    of {Math.ceil(count / 10)}
+                </div>
+                <div onClick={handleGo} className="btn btn-sm btn-primary">Go</div>
             </div>
         </>
     )
@@ -70,6 +242,13 @@ const VerificationsTable = () => {
 export default VerificationsTable
 
 const Row = (props) => {
+    const pending = <div className='bg-warning text-sm text-white w-[100px] rounded text-center'> Pending </div>
+    const complete = <div className='bg-success text-sm text-white w-[100px] rounded text-center'> Complete </div>
+
+    let status = pending
+    if (props.completed) {
+        status = complete
+    }
     const handleComplete = (event) => {
         document.getElementById('completemodal').showModal()
     }
@@ -79,17 +258,17 @@ const Row = (props) => {
     return (
         <>
             <tr>
-                <th>8</th>
-                <td>Username</td>
-                <td>100</td>
+                <th>{props.id}</th>
+                <td>{props.username}</td>
+                <td>{props.fullname}</td>
                 <td> <img className='w-[80px] h-[80px] border-2  rounded-lg' src="./dashboard/test.jpg" alt="" />
                 </td>
                 <td><img className='w-[80px] h-[80px] border-2  rounded-lg' src="./dashboard/test.jpg" alt="" /></td>
                 <td><img className='w-[80px] h-[80px] border-2  rounded-lg' src="./dashboard/test.jpg" alt="" /></td>
-                <td>COMPLETED</td>
+                <td>{status}</td>
                 <td>
-                    <span onClick={handleComplete} className='btn btn-success w-[160px] btn-sm' >MARK AS VERIFIED</span>
-                    <span onClick={handleCancel} className='btn btn-error w-[160px] ml-2 btn-sm' >CANCEL/RESUBMIT</span>
+                    {props.completed?"":<span onClick={handleComplete} className='btn btn-success w-[160px] btn-sm' >MARK AS VERIFIED</span>}
+                    <span onClick={handleCancel} className='btn btn-error w-[300px] ml-2 btn-sm' >CANCEL/RESUBMIT/REMOVE VERIFIED</span>
                 </td>
                 <td>
                     <CompelteVerification />
