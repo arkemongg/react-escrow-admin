@@ -2,10 +2,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './styles/VerificationsTable.module.css'
 import { useAuth } from '../../AuthContext';
 import { useEffect, useState } from 'react';
-import { getToken } from '../AxiosHeaders';
+import { getToken, putToken } from '../AxiosHeaders';
 import { FlaotingError } from '../GlobalTemplates/FloatingError';
 import { EmptyMessage } from '../GlobalTemplates/Empty';
 import LoadingArea from '../GlobalTemplates/LoadingArea';
+import { apiUrl } from '../Urls';
 
 const VerificationsTable = () => {
     // Current Location
@@ -242,6 +243,10 @@ const VerificationsTable = () => {
 export default VerificationsTable
 
 const Row = (props) => {
+    const nid_verify_front = apiUrl + props.nid_verify_front
+    const nid_verify_back = apiUrl + props.nid_verify_back
+    const nid_verify_selfie = apiUrl + props.nid_verify_selfie
+
     const pending = <div className='bg-warning text-sm text-white w-[100px] rounded text-center'> Pending </div>
     const complete = <div className='bg-success text-sm text-white w-[100px] rounded text-center'> Complete </div>
 
@@ -250,10 +255,10 @@ const Row = (props) => {
         status = complete
     }
     const handleComplete = (event) => {
-        document.getElementById('completemodal').showModal()
+        document.getElementById(`completemodal${props.id}`).showModal()
     }
     const handleCancel = (event) => {
-        document.getElementById('cancelmodal').showModal()
+        document.getElementById(`cancelmodal${props.id}`).showModal()
     }
     return (
         <>
@@ -261,18 +266,37 @@ const Row = (props) => {
                 <th>{props.id}</th>
                 <td>{props.username}</td>
                 <td>{props.fullname}</td>
-                <td> <img className='w-[80px] h-[80px] border-2  rounded-lg' src="./dashboard/test.jpg" alt="" />
+                <td> <img className='w-[80px] h-[80px] border-2  rounded-lg' src={nid_verify_front} alt="" />
                 </td>
-                <td><img className='w-[80px] h-[80px] border-2  rounded-lg' src="./dashboard/test.jpg" alt="" /></td>
-                <td><img className='w-[80px] h-[80px] border-2  rounded-lg' src="./dashboard/test.jpg" alt="" /></td>
+                <td><img className='w-[80px] h-[80px] border-2  rounded-lg' src={nid_verify_back} alt="" /></td>
+                <td><img className='w-[80px] h-[80px] border-2  rounded-lg' src={nid_verify_selfie} alt="" /></td>
                 <td>{status}</td>
                 <td>
-                    {props.completed?"":<span onClick={handleComplete} className='btn btn-success w-[160px] btn-sm' >MARK AS VERIFIED</span>}
+                    {props.completed ? "" : <span onClick={handleComplete} className='btn btn-success w-[160px] btn-sm' >MARK AS VERIFIED</span>}
                     <span onClick={handleCancel} className='btn btn-error w-[300px] ml-2 btn-sm' >CANCEL/RESUBMIT/REMOVE VERIFIED</span>
                 </td>
                 <td>
-                    <CompelteVerification />
-                    <CancelVerification />
+                    {props.completed ? "" :
+                        <CompelteVerification
+                            nid_verify_front={nid_verify_front}
+                            nid_verify_back={nid_verify_back}
+                            nid_verify_selfie={nid_verify_selfie}
+                            id={props.id}
+                            username={props.username}
+                            fullname={props.fullname}
+                            completed={props.completed}
+                        />
+                    }
+
+                    <CancelVerification
+                        nid_verify_front={nid_verify_front}
+                        nid_verify_back={nid_verify_back}
+                        nid_verify_selfie={nid_verify_selfie}
+                        id={props.id}
+                        username={props.username}
+                        fullname={props.fullname}
+                        completed={props.completed}
+                    />
                 </td>
             </tr>
         </>
@@ -280,46 +304,121 @@ const Row = (props) => {
 }
 
 const CompelteVerification = (props) => {
+    // const location = useLocation();
+    //logout when invalid token
+    const { logout } = useAuth()
 
+    //error message
+    const [message, setMessage] = useState("Error.")
+
+    //when clicked confirmed btn
+    const [clicked, setClicked] = useState(false)
+
+    // Navigate new url because it should be stored in memory so go back/forward will work
+    // const navigate = useNavigate()
+
+    //patch success
+    const [success, setSuccess] = useState(false)
+    //patch error
+    const [err, setErr] = useState(false)
+
+    //handle complete btn
+    const handleComplete = () => {
+        //clicked true to show the loading animation to btn
+        setClicked(true)
+
+        //data to patch
+        const patchData = {
+            "submited": true,
+            "completed": true
+        }
+        //url to api
+        const url = `/admin/verification/${props.id}/`
+        //send request
+        putToken(url, patchData)
+            .then(data => {
+                // const newUrl = new URL(`http://.../${location.search}`)
+                // newUrl.searchParams.set("updated",props.title+Math.random(1))
+                // navigate(newUrl.search)
+                if (data.status === 200) {
+                    //set success
+                    setSuccess(true)
+                }
+
+                //stop loading animation
+                setClicked(false)
+
+            }).catch(error => {
+                setErr(true)
+                if (error.response) {
+                    if (error.response.status === 401) {
+                        logout() //logout when invalid token
+                    } else if (error.response.status === 400) {
+                        //error message
+                        setMessage("Unexpected error.")
+                    }
+                } else {
+                    //error message
+                    setMessage("No response from server")
+                }
+                //stop loading animation
+
+                setClicked(false)
+            })
+    }
+
+    //close btn to remove the confirmation text
+    const handleClose = () => {
+        setSuccess(false)
+        setErr(false)
+    }
     return (
         <>
-            <dialog id="completemodal" className="modal">
+            <dialog id={`completemodal${props.id}`} className="modal">
                 <div className="modal-box">
                     <h3 className="font-bold text-lg">Complete Verification</h3>
-                    <h3 className="font-bold text-lg">ID#:6940</h3>
+                    <h3 className="font-bold text-lg">ID#:{props.id}</h3>
 
-                    <div className="categoryInput">
+                    <div>
 
                         <div className="my-2 text-xl">Username</div>
-                        <input value={props.data} disabled type="text" placeholder="Username" className="input input-bordered w-full max-w-lg" />
+                        <input value={props.username} disabled type="text" placeholder="Username" className="input input-bordered w-full max-w-lg" />
 
                         <div className="my-2 text-xl">Customer Name</div>
-                        <input value={props.data} disabled type="text" placeholder="Customer Name" className="input input-bordered w-full max-w-lg" />
+                        <input value={props.fullname} disabled type="text" placeholder="Customer Name" className="input input-bordered w-full max-w-lg" />
 
                         <div className="my-2 text-xl text-center">NID Front</div>
                         <div className="my-2 ">
-                            <img className='w-[328px] h-[250px] m-auto ' src="./dashboard/test.jpg" alt="" />
+                            <img className='w-[328px] h-[250px] m-auto ' src={props.nid_verify_front} alt="" />
                         </div>
 
                         <div className="my-2 text-xl text-center">NID Back</div>
                         <div className="my-2 ">
-                            <img className='w-[328px] h-[250px] m-auto ' src="./dashboard/test.jpg" alt="" />
+                            <img className='w-[328px] h-[250px] m-auto ' src={props.nid_verify_back} alt="" />
                         </div>
 
                         <div className="my-2 text-xl text-center">Selfie</div>
                         <div className="my-2 ">
-                            <img className='w-[328px] h-[250px] m-auto ' src="./dashboard/test.jpg" alt="" />
+                            <img className='w-[328px] h-[250px] m-auto ' src={props.nid_verify_selfie} alt="" />
                         </div>
 
                         <div htmlFor="status" className="my-2 text-xl">Status</div>
-                        <input type="text" disabled placeholder="Status" className="input input-bordered w-full max-w-lg" />
+                        <input value={props.completed?"COMPLETE":"PENDING"} type="text" disabled placeholder="Status" className="input input-bordered w-full max-w-lg" />
                     </div>
+                    {/* confirmation text */}
+                    <p className={`text-success  ${success ? '' : 'hidden'}`}>Successfully updated.</p>
+                    <p className={`text-error  ${err ? '' : 'hidden'}`}>{message}</p>
 
-                    <button className="btn btn-success mt-2 w-[200px]">MARK AS VERIFIED</button>
+                    {/* Handle btn */}
+                    <button onClick={handleComplete} className="btn btn-success mt-2 w-[200px]">
+
+                        {clicked ? <span className="loading loading-dots loading-xs"></span> : "MARK AS VERIFIED"}
+
+                    </button>
 
                     <div className="modal-action">
                         <form method="dialog">
-                            <button className="btn">Close</button>
+                            <button onClick={handleClose} className="btn">Close</button>
                         </form>
                     </div>
                 </div>
@@ -329,46 +428,123 @@ const CompelteVerification = (props) => {
 }
 
 const CancelVerification = (props) => {
+    // const location = useLocation();
+    //logout when invalid token
+    const { logout } = useAuth()
 
+    //error message
+    const [message, setMessage] = useState("Error.")
+
+    //when clicked confirmed btn
+    const [clicked, setClicked] = useState(false)
+
+    // Navigate new url because it should be stored in memory so go back/forward will work
+    // const navigate = useNavigate()
+
+    //patch success
+    const [success, setSuccess] = useState(false)
+    //patch error
+    const [err, setErr] = useState(false)
+
+    //handle complete btn
+    const handleCancel = () => {
+        //clicked true to show the loading animation to btn
+        setClicked(true)
+
+        //data to patch
+        const patchData = {
+            "submited": false,
+            "completed": false
+        }
+        //url to api
+        const url = `/admin/verification/${props.id}/`
+        //send request
+        putToken(url, patchData)
+            .then(data => {
+                // const newUrl = new URL(`http://.../${location.search}`)
+                // newUrl.searchParams.set("updated",props.title+Math.random(1))
+                // navigate(newUrl.search)
+                if (data.status === 200) {
+                    //set success
+                    setSuccess(true)
+                }
+
+                //stop loading animation
+                setClicked(false)
+
+            }).catch(error => {
+                setErr(true)
+                if (error.response) {
+                    if (error.response.status === 401) {
+                        logout() //logout when invalid token
+                    } else if (error.response.status === 400) {
+                        //error message
+                        setMessage("Unexpected error.")
+                    }
+                } else {
+                    //error message
+                    setMessage("No response from server")
+                }
+                //stop loading animation
+
+                setClicked(false)
+            })
+    }
+
+    //close btn to remove the confirmation text
+    const handleClose = () => {
+        setSuccess(false)
+        setErr(false)
+    }
     return (
         <>
-            <dialog id="cancelmodal" className="modal">
+            <dialog id={`cancelmodal${props.id}`} className="modal">
                 <div className="modal-box">
                     <h3 className="font-bold text-lg">Cancel Verification</h3>
                     <h3 className="font-bold text-lg">ID#:6940</h3>
 
-                    <div className="categoryInput">
+                    <div>
 
-                        <div className="my-2 text-xl">Username</div>
-                        <input value={props.data} disabled type="text" placeholder="Username" className="input input-bordered w-full max-w-lg" />
+                    <div className="my-2 text-xl">Username</div>
+                        <input value={props.username} disabled type="text" placeholder="Username" className="input input-bordered w-full max-w-lg" />
 
                         <div className="my-2 text-xl">Customer Name</div>
-                        <input value={props.data} disabled type="text" placeholder="Customer Name" className="input input-bordered w-full max-w-lg" />
+                        <input value={props.fullname} disabled type="text" placeholder="Customer Name" className="input input-bordered w-full max-w-lg" />
 
                         <div className="my-2 text-xl text-center">NID Front</div>
                         <div className="my-2 ">
-                            <img className='w-[328px] h-[250px] m-auto ' src="./dashboard/test.jpg" alt="" />
+                            <img className='w-[328px] h-[250px] m-auto ' src={props.nid_verify_front} alt="" />
                         </div>
 
                         <div className="my-2 text-xl text-center">NID Back</div>
                         <div className="my-2 ">
-                            <img className='w-[328px] h-[250px] m-auto ' src="./dashboard/test.jpg" alt="" />
+                            <img className='w-[328px] h-[250px] m-auto ' src={props.nid_verify_back} alt="" />
                         </div>
 
                         <div className="my-2 text-xl text-center">Selfie</div>
                         <div className="my-2 ">
-                            <img className='w-[328px] h-[250px] m-auto ' src="./dashboard/test.jpg" alt="" />
+                            <img className='w-[328px] h-[250px] m-auto ' src={props.nid_verify_selfie} alt="" />
                         </div>
 
                         <div htmlFor="status" className="my-2 text-xl">Status</div>
-                        <input type="text" disabled placeholder="Status" className="input input-bordered w-full max-w-lg" />
+                        <input value={props.completed?"COMPLETE":"PENDING"} type="text" disabled placeholder="Status" className="input input-bordered w-full max-w-lg" />
+                    
                     </div>
 
-                    <button className="btn btn-error mt-2 w-[200px]">CANCEL/RESUBMIT</button>
+                    {/* confirmation text */}
+                    <p className={`text-success  ${success ? '' : 'hidden'}`}>Successfully updated.</p>
+                    <p className={`text-error  ${err ? '' : 'hidden'}`}>{message}</p>
+
+                    {/* Handle btn */}
+                    <button onClick={handleCancel} className="btn btn-error mt-2 w-[200px]">
+
+                        {clicked ? <span className="loading loading-dots loading-xs"></span> : "REMOVE VERIFY / CANCEL"}
+
+                    </button>
 
                     <div className="modal-action">
                         <form method="dialog">
-                            <button className="btn">Close</button>
+                            <button onClick={handleClose} className="btn">Close</button>
                         </form>
                     </div>
                 </div>

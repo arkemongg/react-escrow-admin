@@ -337,7 +337,7 @@ const UpdateCustomer = (props) => {
                     <h3 className="font-bold text-lg">UPDATE CUSTOMER</h3>
                     <h3 className="font-bold text-lg">ID#:69402</h3>
 
-                    <div className="categoryInput">
+                    <div>
                         <div htmlFor="username" className="my-2 text-xl">Username</div>
                         <input value={props.data} type="text" placeholder="Username" className="input input-bordered w-full max-w-lg" />
                         <div htmlFor="description" className="my-2 text-xl">Email</div>
@@ -439,7 +439,7 @@ const SuperCustomer = (props) => {
                         ID#:{props.id}
                     </h3>
 
-                    <div className="categoryInput">
+                    <div>
                         <div className="my-2 text-xl">Username</div>
                         <input value={props.username} disabled type="text" placeholder="Username" className="input input-bordered w-full max-w-lg" />
                         <div className="my-2 text-xl">Email</div>
@@ -550,7 +550,7 @@ const RemoveSuperCustomer = (props) => {
                         ID#:{props.id}
                     </h3>
 
-                    <div className="categoryInput">
+                    <div>
                         <div className="my-2 text-xl">Username</div>
                         <input value={props.username} disabled type="text" placeholder="Username" className="input input-bordered w-full max-w-lg" />
                         <div className="my-2 text-xl">Email</div>
