@@ -243,9 +243,11 @@ const VerificationsTable = () => {
 export default VerificationsTable
 
 const Row = (props) => {
-    const nid_verify_front = apiUrl + props.nid_verify_front
-    const nid_verify_back = apiUrl + props.nid_verify_back
-    const nid_verify_selfie = apiUrl + props.nid_verify_selfie
+    
+
+    const nid_verify_front = props.nid_verify_front
+    const nid_verify_back = props.nid_verify_back
+    const nid_verify_selfie = props.nid_verify_selfie
 
     const pending = <div className='bg-warning text-sm text-white w-[100px] rounded text-center'> Pending </div>
     const complete = <div className='bg-success text-sm text-white w-[100px] rounded text-center'> Complete </div>
