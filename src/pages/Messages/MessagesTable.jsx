@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import styles from './styles/DepositsTable.module.css'
+import styles from './styles/MessagesTable.module.css'
 import { useAuth } from '../../AuthContext';
 import { useEffect, useState } from 'react';
 import { convertDatetimeToDate, getToken } from '../AxiosHeaders';
@@ -7,7 +7,7 @@ import { FlaotingError } from '../GlobalTemplates/FloatingError';
 import LoadingArea from '../GlobalTemplates/LoadingArea';
 import { EmptyMessage } from '../GlobalTemplates/Empty';
 
-const DepositsTable = () => {
+const MessagesTable = () => {
     // Current Location
     const location = useLocation();
 
@@ -36,7 +36,7 @@ const DepositsTable = () => {
     const navigate = useNavigate()
 
     // SET API URL FOR DATA
-    const [url, setUrl] = useState(location.search === "" ? '/admin/transactions/' : `/admin/transactions/${location.search}`)
+    const [url, setUrl] = useState(location.search === "" ? '/admin/conversations/' : `/admin/conversations/${location.search}`)
     // next from api
     const [nextUrl, setNexturl] = useState(null)
 
@@ -57,7 +57,7 @@ const DepositsTable = () => {
             setPageNumber(pageNumber + 1)
         }
         //set the url to fetch the data
-        setUrl(`/admin/transactions/${location.search}`)
+        setUrl(`/admin/conversations/${location.search}`)
         return () => { };
     }, [location.key]); //location.key change by navigate
 
@@ -165,24 +165,18 @@ const DepositsTable = () => {
             {/* floating erromessage */}
             {err ? <FlaotingError err={err} setErr={setErr} message={message} /> : ""}
 
-            <div className={`${styles.DepositsTable} flex justify-between items-center px-3`}>
+            <div className={`${styles.MessagesTable} flex justify-between items-center px-3`}>
                 <div className="text-2xl">
-                    Deposits
+                    Messages
                 </div>
             </div>
-            <div className={`${styles.DepositsTable} flex items-center px-3 bg-[#F2F2F2]`}>
-                <input value={search} onChange={e=>setSearch(e.target.value)} type="text" placeholder="Username / ID" className="input input-bordered rounded-none w-full max-w-lg" />
+            <div className={`${styles.MessagesTable} flex items-center px-3 bg-[#F2F2F2]`}>
+                <input value={search} onChange={e => setSearch(e.target.value)} type="text" placeholder="Username / Conversations ID" className="input input-bordered rounded-none w-full max-w-lg" />
                 <div onClick={handleSearch} className="btn btn-success rounded-none  ml-2 w-[100px]">
                     Search
                 </div>
             </div>
-            {/* <div className={`${styles.CustomersTable} flex items-center px-3`}>
-                <select className="select select-bordered rounded-none w-full max-w-lg">
-                    <option disabled selected>Filter</option>
-                    <option>COMPLETED</option>
-                    <option>NOT COMPLETED</option>
-                </select>
-            </div> */}
+
 
             <div className="overflow-x-auto min-h-[450px]">
                 <table className="table table-zebra">
@@ -190,24 +184,18 @@ const DepositsTable = () => {
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>USERNAME</th>
-                            <th>AMOUNT</th>
-                            <th>STATUS</th>
-                            <th>CREATED AT</th>
-                            <th>PAYMENT LINK</th>
-
+                            <th>USERNAME ONE</th>
+                            <th>USERNAME TWO</th>
+                            <th>MESSAGES</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {fetched ? data.map(deposit => {
+                        {fetched ? data.map(conversation => {
                             return <Row
-                                key={deposit.id}
-                                id={deposit.id}
-                                username={deposit.user}
-                                amount={deposit.amount}
-                                status = {deposit.status}
-                                created_at = {deposit.created_at}
-                                payment_url = {deposit.payment_url_for_admin}
+                                key={conversation.id}
+                                id={conversation.id}
+                                username_one={conversation.username_one}
+                                username_two={conversation.username_two}
                             />
                         }) : <tr></tr>}
 
@@ -238,30 +226,179 @@ const DepositsTable = () => {
     )
 }
 
-export default DepositsTable
+export default MessagesTable
 
 const Row = (props) => {
-    const escrow_pending = <div className='bg-warning text-sm text-white w-[100px] rounded text-center'> Pending </div>
-    const escrow_complete = <div className='bg-success text-sm text-white w-[100px] rounded text-center'> Complete </div>
-    const escrow_failed = <div className='bg-error text-sm text-white w-[100px] rounded text-center'> Failed </div>
-    
-    let status = escrow_pending
+    const { logout } = useAuth()
+    const [count, setCount] = useState([])
+    const [url, setUrl] = useState(`/admin/messages/?search=${props.id}`)
+    const [nextUrl, setNextUrl] = useState()
+    const [data, setData] = useState([])
+    const handleMessage = () => {
+        setData([])
+        document.getElementById(`messagemodal${props.id}`).showModal()
 
-    if(props.status==='F'){
-        status = escrow_failed
-    }else if(props.status==='C'){
-        status = escrow_complete
+            const messageData = getToken(url)
+            messageData.then(data => {
+                setData(oldData => [...oldData, ...data.data.results])
+                setCount(data.data.count)
+                //next
+                setNextUrl(data.data.next)
+            }).catch(error => {
+                if (error.response) {
+                    //401 = unauthoirized
+                    if (error.response.status === 401) {
+                        logout()
+                    } else {
+                        alert("Unexpected error.")
+                    }
+                } else {
+                    // backend down
+                    alert("No response received from the server.")
+                }
+            })
+
     }
+
+
     return (
         <>
             <tr>
                 <th>{props.id}</th>
-                <td>{props.username}</td>
-                <td className='text-primary font-bold'>${(props.amount).toFixed(2)}</td>
-                <td>{status}</td>
-                <td>{convertDatetimeToDate(props.created_at)}</td>
-                <td>{props.payment_url}</td>
+                <td>{props.username_one}</td>
+                <td>{props.username_two}</td>
+                <td>
+                    <span onClick={handleMessage} className='btn btn-success w-[160px] btn-sm' >View Messages</span>
+                    <Message
+                        id={props.id}
+                        user_one={props.username_one}
+                        user_two={props.username_two}
+                        data={data}
+                        count={count}
+                        nextUrl = {nextUrl}
+                        setNextUrl = {setNextUrl}
+                        setData = {setData}
+                    />
+                </td>
             </tr>
         </>
     )
+}
+
+const Message = (props) => {
+    const { logout } = useAuth()
+
+    const handleLoadMore = () => {
+        if(props.nextUrl===null){
+            return;
+        }
+        document.getElementById(`messagemodal${props.id}`).showModal()
+        
+            const messageData = getToken(props.nextUrl)
+            messageData.then(data => {
+                props.setData(oldData => [...oldData, ...data.data.results])
+                props.setNextUrl(data.data.next)
+            }).catch(error => {
+                if (error.response) {
+                    //401 = unauthoirized
+                    if (error.response.status === 401) {
+                        logout()
+                    } else {
+                        alert("Unexpected error.")
+                    }
+                } else {
+                    // backend down
+                    alert("No response received from the server.")
+                }
+            })
+
+    }
+
+    return (
+        <>
+            <dialog id={`messagemodal${props.id}`} className="modal">
+                <div className="modal-box">
+                    <h3 className="font-bold text-lg">Messages</h3>
+                    {props.data.map(message => {
+                        if (message.username === props.user_one) {
+                            return <ChatStart
+                                key={message.id}
+                                username={message.username}
+                                message={message.message}
+                                created_at={message.created_at}
+                            />
+                        } else {
+                            return <ChatEnd
+                                key={message.id}
+                                username={message.username}
+                                message={message.message}
+                                created_at={message.created_at}
+                            />
+                        }
+                    })}
+                    {props.count > 10 ? <div onClick={handleLoadMore} className='btn btn-primary'>Load  More</div> : ""}
+                    <div className="modal-action">
+                        <form method="dialog">
+                            {/* if there is a button in form, it will close the modal */}
+                            <button className="btn">Close</button>
+                        </form>
+                    </div>
+                </div>
+            </dialog>
+        </>
+    )
+}
+
+const ChatStart = (props) => {
+    return (
+        <>
+            <div className="chat chat-start">
+                <div className="chat-image avatar">
+                    <div className="w-10 rounded-full">
+                        <img src="/dashboard/client.png" />
+                    </div>
+                </div>
+                <div className="chat-header">
+                    {props.username}
+                    <time className="text-xs opacity-50"> {convertToReadableTime(props.created_at)}</time>
+                </div>
+                <div className="chat-bubble">{props.message}</div>
+            </div>
+
+        </>
+    )
+}
+const ChatEnd = (props) => {
+    return (
+        <>
+            <div className="chat chat-end">
+                <div className="chat-image avatar">
+                    <div className="w-10 rounded-full">
+                        <img src="/dashboard/client.png" />
+                    </div>
+                </div>
+                <div className="chat-header">
+                    {props.username}
+
+                    <time className="text-xs opacity-50"> {convertToReadableTime(props.created_at)}</time>
+                </div>
+                <div className="chat-bubble chat-bubble-primary">{props.message}</div>
+            </div>
+        </>
+    )
+}
+
+function convertToReadableTime(timestamp) {
+    const dt = new Date(timestamp);
+    const year = dt.getFullYear();
+    const month = String(dt.getMonth() + 1).padStart(2, '0');
+    const day = String(dt.getDate()).padStart(2, '0');
+    const hours = String(dt.getHours()).padStart(2, '0');
+    const minutes = String(dt.getMinutes()).padStart(2, '0');
+    const seconds = String(dt.getSeconds()).padStart(2, '0');
+
+
+    const readableTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+    return readableTime;
 }

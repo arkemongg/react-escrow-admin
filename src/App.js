@@ -15,6 +15,7 @@ import Products from './pages/Products';
 import Verifications from './pages/Verification';
 import Login from './pages/Login';
 import ScrollToTop from './ScrollToTop';
+import Messages from './pages/Messages';
 
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
             <Route path='deposits' element={< Deposits />} />
             <Route path='withdrawals' element={< Withdrawals />} />
             <Route path='verifications' element={< Verifications />} />
+            <Route path='messages' element={< Messages />} />
           </Route>
         </Routes>
         </ScrollToTop>

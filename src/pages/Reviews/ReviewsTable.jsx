@@ -244,12 +244,12 @@ const Row = (props) => {
                 <td>{props.completed ? "YES" : "NO"}</td>
                 <td>
                     <span onClick={handleEdit} className='btn btn-success w-[150px] btn-sm' >Edit</span>
-                </td>
-                <UpdateReview id={props.id}
+                    <UpdateReview id={props.id}
                     seller_username={props.seller_username}
                     reviewer_username={props.reviewer_username}
                     rating={props.rating}
                     comment={props.comment} />
+                </td>
             </tr>
         </>
     )

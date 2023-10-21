@@ -48,7 +48,7 @@ const BalanceTables = () => {
     // Set the page number according to reload/search/next/prev as the naviagate to new url
     useEffect(() => {
         const newUrl = new URL(`http://.../${location.search}`)
-        setSearch(newUrl.searchParams.get("search"))
+        setSearch(newUrl.searchParams.get("search") === null ? "" : newUrl.searchParams.get("search"))
         // Set page data accoriding to offset
         if(newUrl.searchParams.get("offset")===null){
             setPageNumber(1)

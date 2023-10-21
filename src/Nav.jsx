@@ -90,6 +90,7 @@ const NavigationWithLogin = () => {
                     <li className="p-2"><Link to={'/deposits'}>Deposits</Link></li>
                     <li className="p-2"><Link to={'/withdrawals'}>Withdrawals</Link></li>
                     <li className="p-2"><Link to={'/verifications'}>Verifications</Link></li>
+                    <li className="p-2"><Link to={'/messages'}>Messages</Link></li>
                     {/* <li className="p-2"><button>Support Emails</button></li> */}
                 </ul>
             </div>

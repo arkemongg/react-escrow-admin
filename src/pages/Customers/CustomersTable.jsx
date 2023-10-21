@@ -277,52 +277,55 @@ const Row = (props) => {
                     {props.is_active ? <span onClick={handleDeactivate} className='btn btn-error w-[150px] ml-2 btn-sm' >Deactivate User</span> : <span onClick={handleReactivate} className='btn btn-success w-[150px] ml-2 btn-sm' >Reactivate User</span>}
                 </td>
                 {/* <UpdateCustomer data ={"Ok"}/> */}
-                {
-                    props.super_seller ?
-                        <RemoveSuperCustomer
-                            id={props.id}
-                            username={props.username}
-                            email={props.email}
-                            first_name={props.first_name}
-                            last_name={props.first_name}
-                            is_active={props.is_active}
-                            verified_user={props.verified_user}
-                            super_seller={props.super_seller}
-                        /> :
-                        <SuperCustomer
-                            id={props.id}
-                            username={props.username}
-                            email={props.email}
-                            first_name={props.first_name}
-                            last_name={props.first_name}
-                            is_active={props.is_active}
-                            verified_user={props.verified_user}
-                            super_seller={props.super_seller}
-                        />
-                }
-                {
-                    props.is_active ?
-                        <DeactivateCustomer
-                            id={props.id}
-                            username={props.username}
-                            email={props.email}
-                            first_name={props.first_name}
-                            last_name={props.first_name}
-                            is_active={props.is_active}
-                            verified_user={props.verified_user}
-                            super_seller={props.super_seller}
-                        /> :
-                        <ReactivateCustomer
-                            id={props.id}
-                            username={props.username}
-                            email={props.email}
-                            first_name={props.first_name}
-                            last_name={props.first_name}
-                            is_active={props.is_active}
-                            verified_user={props.verified_user}
-                            super_seller={props.super_seller}
-                        />
-                }
+                <td>
+                    {
+                        props.super_seller ?
+                            <RemoveSuperCustomer
+                                id={props.id}
+                                username={props.username}
+                                email={props.email}
+                                first_name={props.first_name}
+                                last_name={props.first_name}
+                                is_active={props.is_active}
+                                verified_user={props.verified_user}
+                                super_seller={props.super_seller}
+                            /> :
+                            <SuperCustomer
+                                id={props.id}
+                                username={props.username}
+                                email={props.email}
+                                first_name={props.first_name}
+                                last_name={props.first_name}
+                                is_active={props.is_active}
+                                verified_user={props.verified_user}
+                                super_seller={props.super_seller}
+                            />
+                    }
+                    {
+                        props.is_active ?
+                            <DeactivateCustomer
+                                id={props.id}
+                                username={props.username}
+                                email={props.email}
+                                first_name={props.first_name}
+                                last_name={props.first_name}
+                                is_active={props.is_active}
+                                verified_user={props.verified_user}
+                                super_seller={props.super_seller}
+                            /> :
+                            <ReactivateCustomer
+                                id={props.id}
+                                username={props.username}
+                                email={props.email}
+                                first_name={props.first_name}
+                                last_name={props.first_name}
+                                is_active={props.is_active}
+                                verified_user={props.verified_user}
+                                super_seller={props.super_seller}
+                            />
+                    }
+
+                </td>
             </tr>
         </>
     )
