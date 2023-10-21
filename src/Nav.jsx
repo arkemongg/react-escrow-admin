@@ -3,7 +3,7 @@ import './Nav.css'
 import { useAuth } from "./AuthContext";
 const NavigationWithLogin = () => {
     const { logout } = useAuth();
-    const handleLogout = ()=>{
+    const handleLogout = () => {
         logout()
     }
 
@@ -31,22 +31,41 @@ const NavigationWithLogin = () => {
                                     <img className="w-[30px] h-[30px]" src="/delete.png" alt="X" />
                                 </label>
                                 <li className="text-2xl">ESCROW STORE </li>
-                                <li className="p-2"><button>Customers</button></li>
+                                <li className="p-2">
+                                    <Link to={'/'} onClick={closeDrawer}> Dashboard </Link>
+                                </li>
+                                <li className="p-2">
+                                    <Link to={'/customers'} onClick={closeDrawer}> Customers </Link>
+                                </li>
 
                                 <li className="p-2">
                                     <Link to={'/category'} onClick={closeDrawer}> Category</Link>
                                 </li>
 
-                                <li className="p-2"><button>Products</button></li>
-                                <li className="p-2"><button>Orders</button></li>
-                                <li className="p-2"><button>Reviews</button></li>
+                                <li className="p-2">
+                                    <Link to={'/products'} onClick={closeDrawer}> Products</Link>
+                                </li>
+                                <li className="p-2">
+                                    <Link to={'/orders'} onClick={closeDrawer}> Orders</Link>
+                                </li>
+                                <li className="p-2">
+                                    <Link to={'/reviews'} onClick={closeDrawer}> Reviews</Link>
+                                </li>
                                 <li className="p-2">
                                     <Link to={'/balance'} onClick={closeDrawer}> Balance </Link>
                                 </li>
-                                <li className="p-2"><button>Deposits</button></li>
-                                <li className="p-2"><button>Withdrawals</button></li>
-                                <li className="p-2"><button>Verifications</button></li>
-                                {/* <li className="p-2"><button>Support Emails</button></li> */}
+                                <li className="p-2">
+                                    <Link to={'/deposits'} onClick={closeDrawer}> Deposits</Link>
+                                </li>
+                                <li className="p-2">
+                                    <Link to={'/withdrawals'} onClick={closeDrawer}> Withdrawals</Link>
+                                </li>
+                                <li className="p-2">
+                                    <Link to={'/verifications'} onClick={closeDrawer}> Verifications</Link>
+                                </li>
+                                <li className="p-2">
+                                    <Link to={'/messages'} onClick={closeDrawer}> Messages</Link>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -70,7 +89,7 @@ const NavigationWithLogin = () => {
                         </label>
                         <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
                             <li className="p-3 font-bold">
-                                {localStorage.getItem('user')!==null?"@"+localStorage.getItem('user'):"Admin"}
+                                {localStorage.getItem('user') !== null ? "@" + localStorage.getItem('user') : "Admin"}
                             </li>
                             <li><Link to={'/'}>Dashboard</Link></li>
                             <li onClick={handleLogout}><a>Logout</a></li>
@@ -81,6 +100,8 @@ const NavigationWithLogin = () => {
 
             <div className="navbar bg-base-100 border-b-[0.1px] border-gray-300 nav-2">
                 <ul className="w-[100%] flex">
+                    <li className="p-2"><Link to={'/'}>Dashboard</Link></li>
+
                     <li className="p-2"><Link to={'/customers'}>Customers</Link></li>
                     <li className="p-2"><Link to={'/category'}>Category</Link></li>
                     <li className="p-2"><Link to={'/products'}>Products</Link></li>
@@ -113,11 +134,11 @@ const NavigationWithoutLogin = () => {
     return (
         <>
             <div className="navbar bg-base-100 border-b-[0.1px] border-gray-300">
-               
-                    <div className="w-[100%] flex justify-center">
-                        <button className=" btn btn-ghost normal-case text-xl text-center">Escrow Admin Panel</button>
-                    </div>
-                
+
+                <div className="w-[100%] flex justify-center">
+                    <button className=" btn btn-ghost normal-case text-xl text-center">Escrow Admin Panel</button>
+                </div>
+
             </div>
 
 
@@ -136,7 +157,7 @@ const NavigationWithoutLogin = () => {
 
 const Navigation = () => {
     const { isLogged } = useAuth();
-    
+
     if (isLogged) {
         return <NavigationWithLogin />
     } else {

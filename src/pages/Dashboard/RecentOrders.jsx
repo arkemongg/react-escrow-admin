@@ -41,7 +41,7 @@ const RecentOrders = () => {
                         <div className="span">
                             Recent Orders
                         </div>
-                        <Link to={'category'} className="btn btn-primary">
+                        <Link to={'orders'} className="btn btn-primary">
                             All Orders
                         </Link>
                     </div>
